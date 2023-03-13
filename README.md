@@ -3,7 +3,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 
 ## Basic Features
 ### Part 1
-- [ ] Crop an image
+- [x] Crop an image
 - [x] Flip image horizontally
 - [x] Flip image vertically
 - [ ] Scale image
