@@ -16,6 +16,11 @@ and match it, else processing images will be hard
     - 1.618 (golden ratio)
     - Free
 
+# Gray level mapping
+- Include defaults
+    - Negative
+    - Common power laws
+
 # Bonus Features
 - Cropping: Smart cropping
 - Pull EXIF data from the image

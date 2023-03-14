@@ -128,6 +128,24 @@ def rotate():
 
     return {'rotation-rad': angle, 'rotation-deg': angle * (180 / pi)}
 
+@app.route('/map')
+def grayscale_map():
+    map_type = request.args.get('type')
+
+    if map_type == 'linear':
+        alpha = request.args.get('alpha', 1, float)
+        beta = request.args.get('beta', 0, float)
+        pixels, output_img, draw = load_img('lenna.png')
+
+        for x in range(output_img.width):
+            for y in range(output_img.height):
+                color = tuple([int((alpha * px) + beta) for px in pixels[x, y] ])
+                draw.point((x, y), color)
+
+        output_img.save(f'map-{map_type}-alpha{alpha}-beta{beta}.png')
+        return {'mapping': map_type, 'alpha': alpha, 'beta': beta}
+    elif map_type == 'power':
+        return {'mapping': map_type, 'err': 'Not implemented'}
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 
