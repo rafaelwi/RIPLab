@@ -2,6 +2,7 @@ import time
 from flask import Flask, request
 from flask_cors import CORS
 from PIL import Image, ImageDraw
+from math import floor, ceil
 
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def crop():
     w, h = int(request.args.get('w')), int(request.args.get('h'))
     pixels, _, _ = load_img('lenna.png')
 
-    output_img = Image.new('RGB', (int(w), int(h)))
+    output_img = Image.new('RGB', (w, h))
     draw = ImageDraw.Draw(output_img)
 
     for x in range(output_img.width):
@@ -57,6 +58,63 @@ def crop():
     
     output_img.save(f'crop-x{topleft[0]}-y{topleft[1]}-w{w}-h{h}.png')
     return {'x': topleft[0], 'y': topleft[1], 'w': w, 'h': h, 'your-image': 'CROPPED'}
+
+@app.route('/scale')
+def scale():
+    scale_type = request.args.get('type')
+    w, h = int(request.args.get('w')), int(request.args.get('h'))
+
+    if scale_type == 'nn':
+        pixels, _, _ = load_img('lenna.png')
+        output_img = Image.new('RGB', (w, h))
+        draw = ImageDraw.Draw(output_img)
+
+        x_scale = 512 / w
+        y_scale = 512 / h
+
+        for x in range(output_img.width):
+            for y in range(output_img.height):
+                xp, yp = floor(x * x_scale), floor(y * y_scale)
+                draw.point((x, y), pixels[xp, yp])
+
+        output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
+        return {'type': 'Nearest Neighbor', 'new-width': w, 'new-height': h}
+    elif scale_type == 'bl':
+        pixels, _, _ = load_img('lenna.png')
+        output_img = Image.new('RGB', (w, h))
+        draw = ImageDraw.Draw(output_img)
+
+        x_scale = float(512 - 1) / (w - 1) if w > 1 else 0
+        y_scale = float(512 - 1) / (h - 1) if h > 1 else 0
+
+        for x in range(output_img.width):
+            for y in range(output_img.height):
+                rgb = [-1, -1, -1, -1]
+
+                for chan in range(3): # loop through RGB channels
+                    xl, yl = floor(x * x_scale), floor(y * y_scale)
+                    xh, yh = ceil(x * x_scale), ceil(y * y_scale)
+
+                    xw = (x * x_scale) - xl
+                    yw = (y * y_scale) - yl
+
+                    a = pixels[xl, yl][chan]
+                    b = pixels[xh, yl][chan]
+                    c = pixels[xl, yh][chan]
+                    d = pixels[xh, yh][chan]
+
+                    rgb[chan] = floor((a * (1 - xw) * (1 - yw)) + (b * xw * (1 - yw)) + (c * (1 - xw) * yw) + (d * xw * yw))
+                draw.point((x,y), tuple(rgb))
+
+        output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
+        return {'type': 'Bilinear', 'new-width': w, 'new-height': h}
+    elif scale_type == 'bc':
+        return {'type': 'Bicubic', 'err': 'Not implemented'}
+    
+@app.route('/rotate')
+def rotate():
+    deg = float(request.args.get('deg')) % 360.0
+    return {'rotation-deg': deg, 'err': 'Not implemented'}
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 

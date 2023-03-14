@@ -6,7 +6,10 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [x] Crop an image
 - [x] Flip image horizontally
 - [x] Flip image vertically
-- [ ] Scale image
+- [x] Scale image
+    - [x] Nearest Neighbour
+    - [x] Bilinear
+    - [ ] Bicubic
 - [ ] Rotate image
 
 ### Part 2
