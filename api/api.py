@@ -2,7 +2,7 @@ import time
 from flask import Flask, request
 from flask_cors import CORS
 from PIL import Image, ImageDraw
-from math import floor, ceil
+from math import floor, ceil, pi, sin, cos
 
 app = Flask(__name__)
 
@@ -113,8 +113,21 @@ def scale():
     
 @app.route('/rotate')
 def rotate():
-    deg = float(request.args.get('deg')) % 360.0
-    return {'rotation-deg': deg, 'err': 'Not implemented'}
+    angle = (float(request.args.get('deg')) % 360.0) * (pi / 180)
+    pixels, output_img, draw = load_img('lenna.png')
+    cx, cy = output_img.width / 2, output_img.height / 2
+
+    for x in range(output_img.width):
+        for y in range(output_img.height):
+            xp = (x - cx) * cos(angle) - (y - cy) * sin(angle) + cx
+            yp = (x - cx) * sin(angle) + (y - cy) * cos(angle) + cy
+
+            if 0 <= xp < output_img.width and 0 <= yp < output_img.height:
+                draw.point((x, y), pixels[xp, yp])
+    output_img.save(f'rotate-{angle}rad.png')
+
+    return {'rotation-rad': angle, 'rotation-deg': angle * (180 / pi)}
+
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 

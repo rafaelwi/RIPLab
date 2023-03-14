@@ -20,3 +20,4 @@ and match it, else processing images will be hard
 - Cropping: Smart cropping
 - Pull EXIF data from the image
 - Background removal 
+- Colourize images

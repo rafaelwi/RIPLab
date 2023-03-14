@@ -10,7 +10,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
     - [x] Nearest Neighbour
     - [x] Bilinear
     - [ ] Bicubic
-- [ ] Rotate image
+- [x] Rotate image
 
 ### Part 2
 - [ ] Linear grey level mappings
