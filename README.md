@@ -13,8 +13,8 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [x] Rotate image
 
 ### Part 2
-- [x]] Linear grey level mappings
-- [ ] Power law grey level mappings
+- [x] Linear grey level mappings
+- [x] Power law grey level mappings
 - [ ] Histogram calculation
 - [ ] Histogram equalization
 

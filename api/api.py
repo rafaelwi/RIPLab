@@ -145,7 +145,16 @@ def grayscale_map():
         output_img.save(f'map-{map_type}-alpha{alpha}-beta{beta}.png')
         return {'mapping': map_type, 'alpha': alpha, 'beta': beta}
     elif map_type == 'power':
-        return {'mapping': map_type, 'err': 'Not implemented'}
+        gamma = request.args.get('gamma', 1, float)
+        L = 256 # TODO: get from image
+        pixels, output_img, draw = load_img('lenna.png')
+
+        for x in range(output_img.width):
+            for y in range(output_img.height):
+                color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y] ])
+                draw.point((x, y), color)
+        output_img.save(f'map-{map_type}-gamma{gamma}.png')
+        return {'mapping': map_type, 'gamma': gamma}
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 
