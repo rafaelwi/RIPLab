@@ -15,7 +15,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 ### Part 2
 - [x] Linear grey level mappings
 - [x] Power law grey level mappings
-- [ ] Histogram calculation
+- [x] Histogram calculation
 - [ ] Histogram equalization
 
 ### Part 3+4

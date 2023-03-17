@@ -3,6 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from PIL import Image, ImageDraw
 from math import floor, ceil, pi, sin, cos
+from collections import defaultdict
 
 app = Flask(__name__)
 
@@ -155,6 +156,27 @@ def grayscale_map():
                 draw.point((x, y), color)
         output_img.save(f'map-{map_type}-gamma{gamma}.png')
         return {'mapping': map_type, 'gamma': gamma}
+    
+@app.route('/histogram')
+def calculate_histogram():
+    reds, greens, blues = defaultdict(int), defaultdict(int), defaultdict(int)
+    pixels, img, _ = load_img('lenna.png')
+
+    for x in range(img.width):
+        for y in range(img.height):
+            r, g, b = pixels[x, y]
+            reds[r] += 1
+            greens[g] += 1
+            blues[b] += 1
+
+    # Set default values for missing keys
+    for i in range(256):
+        reds[i]
+        greens[i]
+        blues[i]
+
+    return {'red': reds, 'green': greens, 'blue': blues}
+
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 
