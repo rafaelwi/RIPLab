@@ -16,7 +16,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [x] Linear grey level mappings
 - [x] Power law grey level mappings
 - [x] Histogram calculation
-- [ ] Histogram equalization
+- [x] Histogram equalization
 
 ### Part 3+4
 - [ ] Calculate convolution of a rectangular kernel with zero padding
@@ -24,6 +24,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [ ] Min, max, median filtering
 
 ## Bonus Features
+- [ ] Salt and Pepper generation to use for min/max/med filters
 - [ ] GUI
 - [ ] Colour image processing
 - [ ] Bilinear image interpolation

@@ -177,6 +177,48 @@ def calculate_histogram():
 
     return {'red': reds, 'green': greens, 'blue': blues}
 
+@app.route('/histogram-equalization')
+def equalize_histogram():
+    reds, greens, blues = calculate_histogram().values() # TODO: Figure out how these will work together
+    
+    pixels, output_img, draw = load_img('lenna.png')
+    nr_pixels = output_img.width * output_img.height
+
+    # For each gray level, calculate PDF
+    reds_pdf = calculate_pdf(reds, nr_pixels)
+    greens_pdf = calculate_pdf(greens, nr_pixels)
+    blues_pdf = calculate_pdf(blues, nr_pixels)
+
+    # For each gray level, calculate CDF
+    reds_cdf = calculate_cdf(reds_pdf)
+    greens_cdf = calculate_cdf(greens_pdf)
+    blues_cdf = calculate_cdf(blues_pdf)
+
+    # For each gray level, calculate new gray level
+    nr = calculate_new_gray_levels(reds_cdf)
+    ng = calculate_new_gray_levels(greens_cdf)
+    nb = calculate_new_gray_levels(blues_cdf)
+
+    # Apply
+    for x in range(output_img.width):
+        for y in range(output_img.height):
+            r, g, b = pixels[x, y]
+            draw.point((x, y), (nr[r], ng[g], nb[b]))
+    
+    output_img.save(f'equalized.png')
+    return {'red': nr, 'green': ng, 'blue': nb}
+
+def calculate_pdf(graylevels : dict, nr_pixels: int): # sort them too
+    pdf =  {gl : nk / nr_pixels for gl, nk in graylevels.items()}
+    # sort and return the pdf by key
+    return {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}
+
+def calculate_cdf(pdf : dict):
+    return {gl : sum([pdf[i] for i in range(gl + 1)]) for gl in pdf.keys()}
+
+def calculate_new_gray_levels(cdf : dict):
+    return {gl : round((256 - 1) * cdf[gl]) for gl in cdf.keys()}
+
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 
