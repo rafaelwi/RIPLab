@@ -1,9 +1,10 @@
-import time
+from time import time
 from flask import Flask, request
 from flask_cors import CORS
 from PIL import Image, ImageDraw
 from math import floor, ceil, pi, sin, cos
 from collections import defaultdict
+from random import seed, random
 
 app = Flask(__name__)
 
@@ -202,6 +203,29 @@ def calculate_new_gray_levels(graylevels : dict, nr_pixels: int): # sort them to
     pdf = {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}
     cdf = {gl : sum([pdf[i] for i in range(gl + 1)]) for gl in pdf.keys()}
     return {gl : round((256 - 1) * cdf[gl]) for gl in cdf.keys()}
+
+@app.route('/generate-noise')
+def generate_noise():
+    salt, pepper = request.args.get('salt', 5, float), request.args.get('pepper', 5, float)
+    if salt > 100 or pepper > 100 or salt + pepper > 100:
+        return {'err': 'Salt and pepper values must be between 0 and 100'}
+
+    pixels, output_img, draw = load_img('lenna.png')
+    timeseed = int(time() * 1000)
+    seed(timeseed)
+
+    for x in range(output_img.width):
+        for y in range(output_img.height):
+            if random() < salt / 100:
+                draw.point((x, y), (255, 255, 255))
+            elif random() < pepper / 100:
+                draw.point((x, y), (0, 0, 0))
+            else:
+                draw.point((x, y), pixels[x, y])
+    output_img.save(f'noise-salt{salt}-pepper{pepper}-seed{timeseed}.png')
+
+    return {'salt': salt, 'pepper': pepper, 'seed': timeseed}
+
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 

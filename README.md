@@ -24,7 +24,7 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [ ] Min, max, median filtering
 
 ## Bonus Features
-- [ ] Salt and Pepper generation to use for min/max/med filters
+- [x] Salt and Pepper generation to use for min/max/med filters
 - [ ] GUI
 - [ ] Colour image processing
 - [ ] Bilinear image interpolation
