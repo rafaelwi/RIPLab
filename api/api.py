@@ -45,8 +45,8 @@ def vertical_flip():
 
 @app.route('/crop')
 def crop():
-    topleft = (int(request.args.get('x')), int(request.args.get('y')))
-    w, h = int(request.args.get('w')), int(request.args.get('h'))
+    topleft = (request.args.get('x', 0, int), request.args.get('y', 0, int))
+    w, h = request.args.get('w', 1, int), request.args.get('h', 1, int)
     pixels, _, _ = load_img('lenna.png')
 
     output_img = Image.new('RGB', (w, h))
@@ -62,8 +62,8 @@ def crop():
 
 @app.route('/scale')
 def scale():
-    scale_type = request.args.get('type')
-    w, h = int(request.args.get('w')), int(request.args.get('h'))
+    scale_type = request.args.get('type', 'nn', str)
+    w, h = request.args.get('w', 1, int), request.args.get('h', 1, int)
 
     if scale_type == 'nn':
         pixels, _, _ = load_img('lenna.png')
@@ -114,7 +114,7 @@ def scale():
     
 @app.route('/rotate')
 def rotate():
-    angle = (float(request.args.get('deg')) % 360.0) * (pi / 180)
+    angle = (request.args.get('deg', 0, float) % 360.0) * (pi / 180)
     pixels, output_img, draw = load_img('lenna.png')
     cx, cy = output_img.width / 2, output_img.height / 2
 
@@ -140,7 +140,7 @@ def grayscale_map():
 
         for x in range(output_img.width):
             for y in range(output_img.height):
-                color = tuple([int((alpha * px) + beta) for px in pixels[x, y] ])
+                color = tuple([int((alpha * px) + beta) for px in pixels[x, y]])
                 draw.point((x, y), color)
 
         output_img.save(f'map-{map_type}-alpha{alpha}-beta{beta}.png')
@@ -152,7 +152,7 @@ def grayscale_map():
 
         for x in range(output_img.width):
             for y in range(output_img.height):
-                color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y] ])
+                color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y]])
                 draw.point((x, y), color)
         output_img.save(f'map-{map_type}-gamma{gamma}.png')
         return {'mapping': map_type, 'gamma': gamma}
@@ -180,24 +180,13 @@ def calculate_histogram():
 @app.route('/histogram-equalization')
 def equalize_histogram():
     reds, greens, blues = calculate_histogram().values() # TODO: Figure out how these will work together
-    
     pixels, output_img, draw = load_img('lenna.png')
     nr_pixels = output_img.width * output_img.height
 
-    # For each gray level, calculate PDF
-    reds_pdf = calculate_pdf(reds, nr_pixels)
-    greens_pdf = calculate_pdf(greens, nr_pixels)
-    blues_pdf = calculate_pdf(blues, nr_pixels)
-
-    # For each gray level, calculate CDF
-    reds_cdf = calculate_cdf(reds_pdf)
-    greens_cdf = calculate_cdf(greens_pdf)
-    blues_cdf = calculate_cdf(blues_pdf)
-
     # For each gray level, calculate new gray level
-    nr = calculate_new_gray_levels(reds_cdf)
-    ng = calculate_new_gray_levels(greens_cdf)
-    nb = calculate_new_gray_levels(blues_cdf)
+    nr = calculate_new_gray_levels(reds, nr_pixels)
+    ng = calculate_new_gray_levels(greens, nr_pixels)
+    nb = calculate_new_gray_levels(blues, nr_pixels)
 
     # Apply
     for x in range(output_img.width):
@@ -208,17 +197,11 @@ def equalize_histogram():
     output_img.save(f'equalized.png')
     return {'red': nr, 'green': ng, 'blue': nb}
 
-def calculate_pdf(graylevels : dict, nr_pixels: int): # sort them too
-    pdf =  {gl : nk / nr_pixels for gl, nk in graylevels.items()}
-    # sort and return the pdf by key
-    return {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}
-
-def calculate_cdf(pdf : dict):
-    return {gl : sum([pdf[i] for i in range(gl + 1)]) for gl in pdf.keys()}
-
-def calculate_new_gray_levels(cdf : dict):
+def calculate_new_gray_levels(graylevels : dict, nr_pixels: int): # sort them too
+    pdf = {gl : nk / nr_pixels for gl, nk in graylevels.items()}
+    pdf = {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}
+    cdf = {gl : sum([pdf[i] for i in range(gl + 1)]) for gl in pdf.keys()}
     return {gl : round((256 - 1) * cdf[gl]) for gl in cdf.keys()}
-
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
 
