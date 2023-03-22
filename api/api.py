@@ -1,3 +1,5 @@
+from fractions import Fraction
+from itertools import chain
 from time import time
 from flask import Flask, request
 from flask_cors import CORS
@@ -7,6 +9,8 @@ from collections import defaultdict
 from random import seed, random
 
 app = Flask(__name__)
+
+BUILTIN_KERNELS = ['box', 'gauss', 'high-pass', 'low-pass', 'sobel']
 
 def load_img(filename):
     input_img = Image.open(filename)
@@ -225,6 +229,47 @@ def generate_noise():
     output_img.save(f'noise-salt{salt}-pepper{pepper}-seed{timeseed}.png')
 
     return {'salt': salt, 'pepper': pepper, 'seed': timeseed}
+
+@app.route('/kernel', methods=['POST'])
+def kernel():
+    try:
+        data = request.get_json()
+    except:
+        return {'err': 'Empty request body'}
+
+    # Check if data is valid
+    kernel = data.get('kernel')
+    if kernel is None:
+        return {'err': 'Kernel not specified'}
+    if kernel in BUILTIN_KERNELS:
+        return {'kernel': kernel, 'err': 'Builtin kernels not implemented'}
+    
+    # Check that kernel is valid
+    first_len = len(kernel[0])
+    if not all(len(x) == first_len for x in kernel[1:]):
+        return {'kernel': kernel, 'err': 'Kernel is not a rectangular matrix'}
+    
+    # If the values in the kernel aren't floats, convert them
+    kernel = [[float(Fraction(i)) for i in j] for j in kernel]
+
+    pixels, output_img, draw = load_img('lenna.png')
+    offset = len(kernel) // 2
+    for x in range(offset, output_img.width - offset):
+        for y in range(offset, output_img.height - offset):
+            colour = [0, 0, 0]
+            for a in range(len(kernel)):
+                for b in range(len(kernel)):
+                    xn = x + a - offset
+                    yn = y + b - offset
+                    pixel = pixels[xn, yn]
+                    colour[0] += pixel[0] * kernel[a][b]
+                    colour[1] += pixel[1] * kernel[a][b]
+                    colour[2] += pixel[2] * kernel[a][b]
+            draw.point((x, y), (int(colour[0]), int(colour[1]), int(colour[2])))
+    filename = f'kernel-{time()}.png'
+    
+    output_img.save(filename)
+    return {'path': '/kernel', 'filename': filename, 'kernel': kernel}
 
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 

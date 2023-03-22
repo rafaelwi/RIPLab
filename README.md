@@ -19,9 +19,11 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 - [x] Histogram equalization
 
 ### Part 3+4
-- [ ] Calculate convolution of a rectangular kernel with zero padding
+- [x] Calculate convolution of a rectangular kernel with zero padding
 - [ ] Non-linear filtering
-- [ ] Min, max, median filtering
+    - [ ] Min filtering
+    - [ ] Max filtering
+    - [ ] Median filtering
 
 ## Bonus Features
 - [x] Salt and Pepper generation to use for min/max/med filters

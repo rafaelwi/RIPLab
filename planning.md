@@ -21,8 +21,17 @@ and match it, else processing images will be hard
     - Negative
     - Common power laws
 
+# Kernels
+- Include defaults
+    - `box` -> Box blur
+    - `gauss` -> Gaussian blur
+    - `high-pass` -> High-pass filter
+    - `low-pass` -> Low-pass filter
+    - `sobel` -> Sobel filter
+
 # Bonus Features
 - Cropping: Smart cropping
 - Pull EXIF data from the image
-- Background removal 
+- Background removal via chroma key
 - Colourize images
+- Undo button with the Undo Guy from Kidpix
