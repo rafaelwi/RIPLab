@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw
 from math import floor, ceil, pi, sin, cos
 from collections import defaultdict
 from random import seed, random
+from statistics import median
 
 app = Flask(__name__)
 
@@ -230,6 +231,7 @@ def generate_noise():
 
     return {'salt': salt, 'pepper': pepper, 'seed': timeseed}
 
+# TOOD: Implement setting type of kernel (sobel, low pass etc.)
 @app.route('/kernel', methods=['POST'])
 def kernel():
     try:
@@ -270,6 +272,37 @@ def kernel():
     
     output_img.save(filename)
     return {'path': '/kernel', 'filename': filename, 'kernel': kernel}
+
+@app.route('/filter')
+def filter():
+    filter_type = request.args.get('type')
+    size = request.args.get('size', 3, int)
+
+    pixels, output_img, draw = load_img('lenna.png')
+    w, h = output_img.width, output_img.height
+
+    if filter_type not in ['min', 'max', 'median']:
+        return {'type': filter, 'size': size, 'err': 'Invalid filter type'}
+
+    # Get a chunk of the image
+    chunk = list()
+    for x in range (w - size + 1):
+        for y in range (h - size + 1):
+            chunk = [pixels[x+a, y+b] for a in range(size) for b in range(size)]
+            reds = [i[0] for i in chunk]
+            greens = [i[1] for i in chunk]
+            blues = [i[2] for i in chunk]
+
+            if filter_type == 'min':
+                colour = (min(reds), min(greens), min(blues))
+            elif filter_type == 'max':
+                colour = (max(reds), max(greens), max(blues))
+            elif filter_type == 'median':
+                colour = (median(reds), median(greens), median(blues))
+
+            draw.point((x,y), colour)
+    output_img.save(f'filter-{filter_type}-{size}x{size}.png')
+    return {'type': filter_type, 'size': size}
 
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 

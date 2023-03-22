@@ -20,16 +20,16 @@ Rafael's Image Processing Labratory. Final project for CIS*4720.
 
 ### Part 3+4
 - [x] Calculate convolution of a rectangular kernel with zero padding
-- [ ] Non-linear filtering
-    - [ ] Min filtering
-    - [ ] Max filtering
-    - [ ] Median filtering
+- [x] Non-linear filtering
+    - [x] Min filtering
+    - [x] Max filtering
+    - [x] Median filtering
 
 ## Bonus Features
 - [x] Salt and Pepper generation to use for min/max/med filters
 - [ ] GUI
-- [ ] Colour image processing
-- [ ] Bilinear image interpolation
+- [x] Colour image processing
+- [x] Bilinear image interpolation
 - [ ] Bicubic image interpolation
 - [ ] Reflected indexing
 - [ ] Circular indexing
