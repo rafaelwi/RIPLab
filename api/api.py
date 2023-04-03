@@ -40,16 +40,21 @@ Renames the image to a UUID to prevent collisions
 """
 @app.route('/upload', methods=['POST'])
 def upload():
+    # Check if no file was uploaded
     if 'file' not in request.files:
         return {'err': 'No file part'}
+    
     file = request.files['file']
     if file.filename == '':
         return {'err': 'No selected file'}
+    
+    # Save and rename uploaded file
     if file:
         extension = file.filename.split('.')[-1]
-        filename = UPLOAD_FOLDER + secure_filename(f'{uuid4().hex}.{extension}')
-        file.save(filename)
-        return {'url': filename}
+        filename = f"{generate_filename()['filename']}.{extension}"
+        path = UPLOAD_FOLDER + filename
+        file.save(path)
+        return {'url': path}
 
 """
 Returns a given image from the upload folder
@@ -58,20 +63,30 @@ Returns a given image from the upload folder
 def serve_upload(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
-# TOOD: Generate filenames
+
+"""
+Generates a randomized and secure filename for file uploads
+"""
+@app.route('/generate-filename')
+def generate_filename():
+    return {'filename': secure_filename(f'{uuid4().hex}')}
+
 
 """
 Horizontally flips an image and returns the URL to the image
 """
 @app.route('/horizontal-flip')
 def horizontal_flip():
+    # Load image
     pixels, output_img, draw = load_img('lenna.png')
 
+    # Perform flip
     for x in range(output_img.width):
         for y in range(output_img.height):
             xp = output_img.width - x - 1
             draw.point((x, y), pixels[xp, y])
 
+    # Save and return
     output_img.save('hflip.png')
     return 'Image flipped horizontally'
 
@@ -81,13 +96,16 @@ Vertically flips an image and returns the URL to the image
 """
 @app.route('/vertical-flip')
 def vertical_flip():
+    # Load image
     pixels, output_img, draw = load_img('lenna.png')
 
+    # Perform flip
     for x in range(output_img.width):
         for y in range(output_img.height):
             yp = output_img.height - y - 1
             draw.point((x, y), pixels[x, yp])
     
+    # Save and return
     output_img.save('vflip.png')
     return 'Image flipped vertically'
 
@@ -100,20 +118,29 @@ Crops an image and returns the URL to the image
 """
 @app.route('/crop')
 def crop():
+    # Get parameters from request
     topleft = (request.args.get('x', 0, int), request.args.get('y', 0, int))
     w, h = request.args.get('w', 1, int), request.args.get('h', 1, int)
     pixels, _, _ = load_img('lenna.png')
+    mode = pixels.mode
 
-    # TODO: Generalize for any image type
-    # TODO: Check if crop is valid
-    output_img = Image.new('RGB', (w, h))
+    # Check if crop is valid
+    if topleft[0] < 0 or topleft[1] < 0 or w < 0 or h < 0:
+        return {'err': 'Invalid crop, all values must be positive'}
+    if topleft[0] + w > 512 or topleft[1] + h > 512:
+        return {'err': 'Invalid crop, crop is out of bounds'}
+
+    # Prepare output image
+    output_img = Image.new(mode, (w, h))
     draw = ImageDraw.Draw(output_img)
 
+    # Perform crop
     for x in range(output_img.width):
         for y in range(output_img.height):
             xp, yp = x + topleft[0], y + topleft[1]
             draw.point((x, y), pixels[xp, yp])
     
+    # Save and return
     output_img.save(f'crop-x{topleft[0]}-y{topleft[1]}-w{w}-h{h}.png')
     return {'x': topleft[0], 'y': topleft[1], 'w': w, 'h': h, 'your-image': 'CROPPED'}
 
@@ -127,37 +154,57 @@ Scales an image and returns the URL to the image
 """
 @app.route('/scale')
 def scale():
+    # Get parameters from request
     scale_type = request.args.get('type', 'nn', str)
     w, h = request.args.get('w', 1, int), request.args.get('h', 1, int)
 
+    # Nearest neighbor scaling
     if scale_type == 'nn':
+        # Load image
         pixels, _, _ = load_img('lenna.png')
-        output_img = Image.new('RGB', (w, h))
+        mode = pixels.mode
+
+        # Prepare output image
+        output_img = Image.new(mode, (w, h))
         draw = ImageDraw.Draw(output_img)
 
+        # Determine scaling factors
+        # TODO: Scale for images of all sizes
         x_scale = 512 / w
         y_scale = 512 / h
 
+        # Perform scaling
         for x in range(output_img.width):
             for y in range(output_img.height):
                 xp, yp = floor(x * x_scale), floor(y * y_scale)
                 draw.point((x, y), pixels[xp, yp])
 
+        # Save and return
         output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
         return {'type': 'Nearest Neighbor', 'new-width': w, 'new-height': h}
+    # Bilinear scaling
     elif scale_type == 'bl':
+        # Load image
         pixels, _, _ = load_img('lenna.png')
-        output_img = Image.new('RGB', (w, h))
+        mode = pixels.mode
+        num_channels = len(pixels.getbands())
+
+        # Prepare output image
+        output_img = Image.new(mode, (w, h))
         draw = ImageDraw.Draw(output_img)
 
+        # Determine scaling factors
+        # TODO: Scale for images of all sizes
         x_scale = float(512 - 1) / (w - 1) if w > 1 else 0
         y_scale = float(512 - 1) / (h - 1) if h > 1 else 0
 
+        # Perform scaling
         for x in range(output_img.width):
             for y in range(output_img.height):
-                rgb = [-1, -1, -1, -1]
+                colour = [-1] * num_channels
 
-                for chan in range(3): # loop through RGB channels
+                # Calculate bilinear interpolation for each channel
+                for chan in range(num_channels): # loop through RGB channels
                     xl, yl = floor(x * x_scale), floor(y * y_scale)
                     xh, yh = ceil(x * x_scale), ceil(y * y_scale)
 
@@ -169,11 +216,15 @@ def scale():
                     c = pixels[xl, yh][chan]
                     d = pixels[xh, yh][chan]
 
-                    rgb[chan] = floor((a * (1 - xw) * (1 - yw)) + (b * xw * (1 - yw)) + (c * (1 - xw) * yw) + (d * xw * yw))
-                draw.point((x,y), tuple(rgb))
+                    colour[chan] = floor((a * (1 - xw) * (1 - yw)) + (b * xw * (1 - yw)) + (c * (1 - xw) * yw) + (d * xw * yw))
 
+                # Set pixel colour after calculating interpolation for all channels
+                draw.point((x,y), tuple(colour))
+
+        # Save and return
         output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
         return {'type': 'Bilinear', 'new-width': w, 'new-height': h}
+    # Bicubic scaling
     elif scale_type == 'bc':
         return {'type': 'Bicubic', 'err': 'Not implemented'}
     
@@ -185,19 +236,26 @@ Images are cut off when rotated
 """
 @app.route('/rotate')
 def rotate():
+    # Get parameters from request
     angle = (request.args.get('deg', 0, float) % 360.0) * (pi / 180)
+
+    # Load image
     pixels, output_img, draw = load_img('lenna.png')
     cx, cy = output_img.width / 2, output_img.height / 2
 
+    # Perform rotation
     for x in range(output_img.width):
         for y in range(output_img.height):
+            # Calculate new pixel position based on given angle
             xp = (x - cx) * cos(angle) - (y - cy) * sin(angle) + cx
             yp = (x - cx) * sin(angle) + (y - cy) * cos(angle) + cy
 
+            # Draw pixel if it is visible
             if 0 <= xp < output_img.width and 0 <= yp < output_img.height:
                 draw.point((x, y), pixels[xp, yp])
+    
+    # Save and return
     output_img.save(f'rotate-{angle}rad.png')
-
     return {'rotation-rad': angle, 'rotation-deg': angle * (180 / pi)}
 
 """
