@@ -1,17 +1,20 @@
 from fractions import Fraction
 from itertools import chain
 from time import time
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from PIL import Image, ImageDraw
 from math import floor, ceil, pi, sin, cos
 from collections import defaultdict
 from random import seed, random
 from statistics import median
+from werkzeug.utils import secure_filename
+from uuid import uuid4
 
 app = Flask(__name__)
 
 BUILTIN_KERNELS = ['box', 'gauss', 'high-pass', 'low-pass', 'sobel']
+UPLOAD_FOLDER = 'uploads/'
 
 def load_img(filename):
     input_img = Image.open(filename)
@@ -21,9 +24,25 @@ def load_img(filename):
     draw = ImageDraw.Draw(output_img)
     return pixels, output_img, draw
 
-@app.route('/time')
-def get_current_time():
-    return {'time': time.time()}
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'file' not in request.files:
+        return {'err': 'No file part'}
+    file = request.files['file']
+    if file.filename == '':
+        return {'err': 'No selected file'}
+    if file:
+        extension = file.filename.split('.')[-1]
+        filename = UPLOAD_FOLDER + secure_filename(f'{uuid4().hex}.{extension}')
+        file.save(filename)
+        return {'url': filename}
+
+
+@app.route(f'/{UPLOAD_FOLDER}<path:filename>')
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
 
 @app.route('/horizontal-flip')
 def horizontal_flip():

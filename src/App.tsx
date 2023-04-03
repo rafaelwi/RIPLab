@@ -1,35 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
-  const [currentTime, setCurrentTime] = useState(0);
+class App extends React.Component<{}, { imageURL: string }> {
+  uploadInput: any;
 
-  useEffect(() => {
-    fetch('/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      imageURL: 'http://localhost:4720/uploads/NOIMAGE.png',
+    };
+
+    this.handleUploadImage = this.handleUploadImage.bind(this);
+  }
+
+  handleUploadImage(ev: { preventDefault: () => void; }) {
+    ev.preventDefault();
+    const data = new FormData();
+    data.append('file', this.uploadInput.files[0]);
+
+    fetch('http://localhost:4720/upload', {
+      method: 'POST',
+      body: data,
+    }).then((response) => {
+      response.json().then((body) => {
+        this.setState({ imageURL: body.url });
+      });
     });
-  }, []);
+  }
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>The current time is {currentTime}</p>
-      </header>
-    </div>
-  );
+  render() {
+    return (
+      <form onSubmit={this.handleUploadImage}>
+        <div>
+          <input ref={(ref) => { this.uploadInput = ref; }} type="file" />
+        </div>
+        <div>
+          <button>Upload</button>
+        </div>
+        <img src={this.state.imageURL} alt="img" />
+      </form>
+    );
+  }
 }
 
 export default App;
