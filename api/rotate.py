@@ -1,6 +1,6 @@
 # rotate.py
 from PIL.Image import Image
-from api.common import get_image_writables
+from common import get_image_writables
 from math import pi, sin, cos
 
 def rotate(img : Image, params : dict) -> Image:

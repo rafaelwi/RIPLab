@@ -1,6 +1,6 @@
 # scale.py
 from PIL.Image import Image
-from api.common import get_image_pixels, get_new_image_writables
+from common import get_image_pixels, get_new_image_writables
 from math import floor, ceil
 
 

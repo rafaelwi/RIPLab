@@ -1,6 +1,6 @@
 # kernel.py
 from PIL.Image import Image
-from api.common import get_image_writables
+from common import get_image_writables
 
 def kernel(img: Image, params: dict) -> Image:
     """

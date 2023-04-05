@@ -4,7 +4,7 @@
 from PIL import Image, ImageDraw
 
 
-def get_image_writables(img : Image):
+def get_image_writables(img : Image.Image):
     """
     Get the pixels, mode, new image, and draw object for an image
     :param img: The image to get the writables for
@@ -26,7 +26,7 @@ def get_new_image_writables(w : int, h : int, mode : str):
     return new_img, draw
 
 
-def get_image_pixels(img : Image):
+def get_image_pixels(img : Image.Image):
     """
     Get the pixels for an image
     :param img: The image to get the pixels for

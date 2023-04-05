@@ -1,6 +1,6 @@
 # crop.py
-from PIL.Image import Image, ImageDraw
-from api.common import get_image_pixels, get_new_image_writables
+from PIL.Image import Image
+from common import get_image_pixels, get_new_image_writables
 
 def crop(img: Image, params: dict) -> Image:
     """

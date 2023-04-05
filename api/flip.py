@@ -1,26 +1,27 @@
 # flip.py
-from PIL.Image import Image 
-from api.common import get_image_writables
+from PIL import Image 
+from common import get_image_writables
 
-def horizontal_flip(img : Image) -> Image:
+def horizontal_flip(img : Image.Image) -> Image.Image:
     """
     Flip an image horizontally
     :param img: The image to flip
     """
     # Load image
+    print('in horizontal_flip')
     pixels, new_img, draw = get_image_writables(img)
 
     # Flip image
-    for x in range(img.size[0]):
-        for y in range(img.size[1]):
-            xp = img.size[0] - x - 1
-            draw.point((xp, y), pixels[x, y])
+    for x in range(img.width):
+        for y in range(img.height):
+            xp = img.width - x - 1
+            draw.point((x, y), pixels[xp, y])
 
     # Save and return
     return new_img
 
 
-def vertical_flip(img : Image) -> Image:
+def vertical_flip(img : Image.Image) -> Image.Image:
     """
     Flip an image vertically
     :param img: The image to flip
@@ -29,10 +30,10 @@ def vertical_flip(img : Image) -> Image:
     pixels, new_img, draw = get_image_writables(img)
 
     # Flip image
-    for x in range(img.size[0]):
-        for y in range(img.size[1]):
-            yp = img.size[1] - y - 1
-            draw.point((x, yp), pixels[x, y])
+    for x in range(img.width):
+        for y in range(img.height):
+            yp = img.height - y - 1
+            draw.point((x, y), pixels[x, yp])
 
     # Save and return
     return new_img

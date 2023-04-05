@@ -2,7 +2,7 @@
 from random import randint, random, seed
 from statistics import median
 from PIL.Image import Image
-from api.common import get_image_writables
+from common import get_image_writables
 from time import time
 
 def generate_noise(img: Image, params: dict) -> Image:

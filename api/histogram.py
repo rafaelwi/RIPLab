@@ -1,6 +1,6 @@
 # histogram.py
 from PIL.Image import Image
-from api.common import get_image_pixels, get_image_writables
+from common import get_image_pixels, get_image_writables
 from collections import defaultdict
 
 def histogram(img : Image) -> dict:

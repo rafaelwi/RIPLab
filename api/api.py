@@ -4,15 +4,15 @@ from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from uuid import uuid4
-from PIL.Image import Image
-from api.crop import crop
-from api.filter import generate_noise, filter
-from api.flip import horizontal_flip, vertical_flip
-from api.histogram import histogram, histogram_equalization
-from api.kernel import kernel
-from api.map import map
-from api.rotate import rotate
-from api.scale import scale
+from PIL import Image
+from crop import crop
+from filter import generate_noise, filter
+from flip import horizontal_flip, vertical_flip
+from histogram import histogram, histogram_equalization
+from kernel import kernel
+from map import map
+from rotate import rotate
+from scale import scale
 
 app = Flask(__name__)
 
@@ -70,14 +70,15 @@ def generate_filename():
 @app.route('/filter', methods=['GET', 'POST'])
 @app.route('/kernel', methods=['GET', 'POST'])
 def dispatch():
-    operation = request.path
-    method = request.method.replace('/', '')
+    operation = request.path.replace('/', '')
+    method = request.method
+    print (f'Operation: {operation}, Method: {method}')
 
     # Get parameters
     if request.method == 'GET':
         params = request.args
     else:
-        params = request.form
+        params = request.get_json()
 
     # Validate parameters for given operation
     success, validated_params, msg = validate_params(operation, params)
@@ -95,13 +96,14 @@ def dispatch():
     else:
         new_img = call_operation(operation, img, validated_params)
 
-    # Save image and return new image URL
-    new_url = save_image(new_img, validated_params['ext'])
+        # Save image and return new image URL
+        new_url = save_image(new_img, validated_params['ext'])
 
-    return {'operation': operation, 'parameters': validated_params, 'method': method, 'url': new_url}
+        return {'operation': operation, 'parameters': validated_params, 
+                'method': method, 'new-url': new_url}
 
 
-def validate_params(operation, params) -> tuple(bool, dict, str):
+def validate_params(operation, params) -> tuple[bool, dict, str]:
     """
     Validates the parameters for a given operation by creating a new, validated 
     dictionary of values.
@@ -215,7 +217,7 @@ def validate_params(operation, params) -> tuple(bool, dict, str):
     return True, validated_params, ''
 
 
-def call_operation(operation, img, params) -> Image:
+def call_operation(operation, img, params) -> Image.Image:
     """
     Calls the given operation with the given parameters on the given image.
     """
@@ -241,14 +243,14 @@ def call_operation(operation, img, params) -> Image:
         return scale(img, params)
 
 
-def save_image(img, ext) -> str:
+def save_image(img: Image.Image, ext: str) -> str:
     """
     Saves the given image to the upload folder and returns the filename.
     """
-
     # Create a unique filename
-    filename = str(uuid4()) + ext
+    filename = str(uuid4()) + '.' + ext
     path = UPLOAD_FOLDER + filename
+    print(f'Path: {path}')
 
     # Save the image
     img.save(path)
