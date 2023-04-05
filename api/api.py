@@ -4,7 +4,7 @@ from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from uuid import uuid4
-from PIL import Image
+from PIL.Image import Image
 from api.crop import crop
 from api.filter import generate_noise, filter
 from api.flip import horizontal_flip, vertical_flip
@@ -89,12 +89,17 @@ def dispatch():
     img = Image.open(validated_params['url'])
 
     # Call operation
-    new_img = call_operation(operation, img, validated_params)
+    if operation == 'histogram':
+        histogram_dict = histogram(img)
+        return {'operation': operation, 'parameters': validated_params, 'method': method, 'histogram': histogram_dict}
+    else:
+        new_img = call_operation(operation, img, validated_params)
 
     # Save image and return new image URL
-    save_image(new_img)
+    new_url = save_image(new_img, validated_params['ext'])
 
-    return {'operation': operation, 'method': method}
+    return {'operation': operation, 'parameters': validated_params, 'method': method, 'url': new_url}
+
 
 def validate_params(operation, params) -> tuple(bool, dict, str):
     """
@@ -110,6 +115,7 @@ def validate_params(operation, params) -> tuple(bool, dict, str):
     if 'url' not in params:
         return False, {}, 'No image URL'
     validated_params['url'] = params['url']
+    validated_params['ext'] = validated_params['url'].split('.')[-1]
     
     # Crop validation: check that all parameters are present and valid
     if operation == 'crop':
@@ -213,9 +219,39 @@ def call_operation(operation, img, params) -> Image:
     """
     Calls the given operation with the given parameters on the given image.
     """
-    pass
-    
- 
-def save_image(img) -> str:
-    pass
+    if operation == 'crop':
+        return crop(img, params)
+    elif operation == 'generate-noise':
+        return generate_noise(img, params)
+    elif operation == 'filter':
+        return filter(img, params)
+    elif operation == 'horizontal-flip':
+        return horizontal_flip(img)
+    elif operation == 'vertical-flip':
+        return vertical_flip(img)
+    elif operation == 'histogram-equalization':
+        return histogram_equalization(img, params)
+    elif operation == 'kernel':
+        return kernel(img, params)
+    elif operation == 'map':
+        return map(img, params)
+    elif operation == 'rotate':
+        return rotate(img, params)
+    elif operation == 'scale':
+        return scale(img, params)
 
+
+def save_image(img, ext) -> str:
+    """
+    Saves the given image to the upload folder and returns the filename.
+    """
+
+    # Create a unique filename
+    filename = str(uuid4()) + ext
+    path = UPLOAD_FOLDER + filename
+
+    # Save the image
+    img.save(path)
+
+    # Return the filename
+    return filename
