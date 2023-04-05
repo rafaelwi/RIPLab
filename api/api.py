@@ -6,7 +6,7 @@ from flask_cors import CORS
 from PIL import Image, ImageDraw
 from math import floor, ceil, pi, sin, cos
 from collections import defaultdict
-from random import seed, random
+from random import randint, seed, random
 from statistics import median
 from werkzeug.utils import secure_filename
 from uuid import uuid4
@@ -32,6 +32,14 @@ def load_img(filename):
     output_img = Image.new('RGB', (input_img.width, input_img.height))
     draw = ImageDraw.Draw(output_img)
     return pixels, output_img, draw
+
+def new_load_img(filename):
+    input_img = Image.open(filename)
+    mode = input_img.mode
+    pixels = input_img.load()
+    output_img = Image.new(mode, (input_img.width, input_img.height))
+    draw = ImageDraw.Draw(output_img)
+    return input_img, pixels, output_img, draw
 
 
 """
@@ -127,7 +135,7 @@ def crop():
     # Check if crop is valid
     if topleft[0] < 0 or topleft[1] < 0 or w < 0 or h < 0:
         return {'err': 'Invalid crop, all values must be positive'}
-    if topleft[0] + w > 512 or topleft[1] + h > 512:
+    if topleft[0] + w > pixels.width or topleft[1] + h > pixels.height:
         return {'err': 'Invalid crop, crop is out of bounds'}
 
     # Prepare output image
@@ -169,9 +177,8 @@ def scale():
         draw = ImageDraw.Draw(output_img)
 
         # Determine scaling factors
-        # TODO: Scale for images of all sizes
-        x_scale = 512 / w
-        y_scale = 512 / h
+        x_scale = pixels.width / w
+        y_scale = pixels.height / h
 
         # Perform scaling
         for x in range(output_img.width):
@@ -195,9 +202,8 @@ def scale():
         draw = ImageDraw.Draw(output_img)
 
         # Determine scaling factors
-        # TODO: Scale for images of all sizes
-        x_scale = float(512 - 1) / (w - 1) if w > 1 else 0
-        y_scale = float(512 - 1) / (h - 1) if h > 1 else 0
+        x_scale = float(pixels.width - 1) / (w - 1) if w > 1 else 0
+        y_scale = float(pixels.height - 1) / (h - 1) if h > 1 else 0
 
         # Perform scaling
         for x in range(output_img.width):
@@ -293,7 +299,7 @@ def grayscale_map():
     elif map_type == 'power':
         # Get further parameters from request
         gamma = request.args.get('gamma', 1, float)
-        L = 256 # TODO: get from image
+        L = 256 # TODO: make a dict of different image modes and their respective L values
         pixels, output_img, draw = load_img('lenna.png')
 
         # Perform mapping
@@ -311,55 +317,65 @@ def grayscale_map():
 Calculates the histogram of an image and returns the histogram
 """
 @app.route('/histogram')
+# TODO: Add optional filename parameter so we can use this for equalization
 def calculate_histogram():
     # Load image
-    # TODO: Generalize this to work with any number of channels
-    reds, greens, blues = defaultdict(int), defaultdict(int), defaultdict(int)
-    pixels, img, _ = load_img('lenna.png')
+    inimg, pixels, _, _ = new_load_img('jason.png')
+    bands = inimg.getbands()
+    channels = {band: defaultdict(int) for band in bands}
 
-    # TODO: Generalize this to work with any number of channels
-    # Calculate histogram by iterating over each pixel
-    for x in range(img.width):
-        for y in range(img.height):
-            r, g, b = pixels[x, y]
-            reds[r] += 1
-            greens[g] += 1
-            blues[b] += 1
+    # Calculate histogram by iterating over each pixel and band
+    for x in range(inimg.width):
+        for y in range(inimg.height):
+            colour = pixels[x, y]
+            for i, band in enumerate(bands):
+                channels[band][colour[i]] += 1
 
     # Set default values for missing keys
+    # TODO: Generalize this to work with any number bits
     for i in range(256):
-        reds[i]
-        greens[i]
-        blues[i]
+        for band in bands:
+            channels[band][i]
 
-    return {'red': reds, 'green': greens, 'blue': blues}
+    return channels
+
 
 """
 Calculates the histogram of the image and applies histogram equalization
+:param eqalpha: Whether or not to equalize the alpha channel
 """
 @app.route('/histogram-equalization')
 def equalize_histogram():
+    apply_to_alpha = request.args.get('apply-to-alpha', False, bool)
+
     # Load image
-    # TODO: Generalize this to work with any number of channels
-    reds, greens, blues = calculate_histogram().values() # TODO: Figure out how these will work together
-    pixels, output_img, draw = load_img('lenna.png')
+    channels = calculate_histogram() # TODO: Figure out how these will work together
+    inimg, pixels, output_img, draw = new_load_img('jason.png')
+    bands = inimg.getbands()
     nr_pixels = output_img.width * output_img.height
 
-    # TODO: Generalize this to work with any number of channels
     # For each gray level, calculate new gray level
-    nr = calculate_new_gray_levels(reds, nr_pixels)
-    ng = calculate_new_gray_levels(greens, nr_pixels)
-    nb = calculate_new_gray_levels(blues, nr_pixels)
+    new_graylevels = {band: calculate_new_gray_levels(channels.get(band), nr_pixels) for band in bands}
+
+    # If alpha channel is not to be equalized, set it to the original value
+    if not apply_to_alpha:
+        try:
+            if 'A' in bands:
+                new_graylevels['A'] = {i : i for i in range(256)}
+        except:
+            pass
 
     # Apply equalization
     for x in range(output_img.width):
         for y in range(output_img.height):
-            r, g, b = pixels[x, y]
-            draw.point((x, y), (nr[r], ng[g], nb[b]))
+            colour = pixels[x, y]
+            print(colour)
+            new_colour = tuple([new_graylevels[band][colour[i]] for i, band in enumerate(bands)])
+            draw.point((x, y), new_colour)
     
     # Save and return
-    output_img.save(f'equalized.png')
-    return {'red': nr, 'green': ng, 'blue': nb}
+    output_img.save(f'equalized-jason.png')
+    return new_graylevels
 
 
 """
@@ -381,33 +397,59 @@ def calculate_new_gray_levels(graylevels : dict, nr_pixels: int):
 Generates salt and pepper noise and returns the URL to the image
 :param salt: The percentage chance of pixels to be set to white
 :param pepper: The percentage chance of pixels to be set to black
+:param noise_alpha: Whether or not to include the alpha channel in the noise
 """
 @app.route('/generate-noise')
 def generate_noise():
     # Get parameters from request and error check
-    salt, pepper = request.args.get('salt', 5, float), request.args.get('pepper', 5, float)
-    if salt > 100 or pepper > 100 or salt + pepper > 100:
+    salt_chance, pepper_chance = request.args.get('salt', 5, float), request.args.get('pepper', 5, float)
+    apply_to_alpha = request.args.get('apply-to-alpha', False, bool) # true if alpha channel should be included in noise
+
+    if salt_chance > 100 or pepper_chance > 100 or salt_chance + pepper_chance > 100:
         return {'err': 'Salt and pepper values must be between 0 and 100'}
 
     # Load image and generate noise seed
-    pixels, output_img, draw = load_img('lenna.png')
+    inimg, pixels, output_img, draw = new_load_img('dice.png')
+    nr_bands = len(inimg.getbands())
     timeseed = int(time() * 1000)
     seed(timeseed)
 
-    # TODO: Generalize this to work with any number of channels
+    # Create salt and pepper colours
+    if 'A' in inimg.getbands() and apply_to_alpha:
+        salt = tuple([255] * (nr_bands - 1))
+        pepper = tuple([0] * (nr_bands - 1))
+    else:
+        salt = tuple([255] * nr_bands)
+        pepper = tuple([0] * nr_bands)
+
     # Generate salt and pepper based on chance
     for x in range(output_img.width):
         for y in range(output_img.height):
-            if random() < salt / 100:
-                draw.point((x, y), (255, 255, 255))
-            elif random() < pepper / 100:
-                draw.point((x, y), (0, 0, 0))
+            # Determine chance of changing pixel and chance of salt or pepper
+            random_num = random()
+            random_type = randint(0, 1)
+
+            # Salting
+            if random_type == 0:
+                if random_num < salt_chance / 100 and apply_to_alpha:
+                    draw.point((x, y), salt + (pixels[x, y][-1],))
+                elif random_num < salt_chance / 100:
+                    draw.point((x, y), salt)
+                else:
+                    draw.point((x, y), pixels[x, y])
+            
+            # Peppering
             else:
-                draw.point((x, y), pixels[x, y])
+                if random_num < pepper_chance / 100 and apply_to_alpha:
+                    draw.point((x, y), pepper + (pixels[x, y][-1],))
+                elif random_num < pepper_chance / 100:
+                    draw.point((x, y), pepper)
+                else:
+                    draw.point((x, y), pixels[x, y])
 
     # Save and return
-    output_img.save(f'noise-salt{salt}-pepper{pepper}-seed{timeseed}.png')
-    return {'salt': salt, 'pepper': pepper, 'seed': timeseed}
+    output_img.save(f'noise-salt{salt_chance}-pepper{pepper_chance}-seed{timeseed}.png')
+    return {'salt': salt_chance, 'pepper': pepper_chance, 'noise-alpha': apply_to_alpha, 'seed': timeseed}
 
 # TOOD: Implement setting type of kernel (sobel, low pass etc.)
 """
@@ -427,6 +469,7 @@ def kernel():
         return {'err': 'Empty request body'}
 
     # Check if data is valid
+    apply_to_alpha = data.get('apply-to-alpha', False)
     kernel = data.get('kernel')
     if kernel is None:
         return {'err': 'Kernel not specified'}
@@ -441,24 +484,32 @@ def kernel():
     # If the values in the kernel aren't floats, convert them
     kernel = [[float(Fraction(i)) for i in j] for j in kernel]
 
-    # TODO: Generalize this to work with any number of channels
     # Apply kernel
-    pixels, output_img, draw = load_img('lenna.png')
+    inimg, pixels, output_img, draw = new_load_img('jason.png')
+    bands = inimg.getbands()
     offset = len(kernel) // 2
+
     for x in range(offset, output_img.width - offset):
         for y in range(offset, output_img.height - offset):
-            # TODO: Generalize this to work with any number of channels
-            colour = [0, 0, 0]
+            colour = [0] * len(bands)
             for a in range(len(kernel)):
                 for b in range(len(kernel)):
                     xn = x + a - offset
                     yn = y + b - offset
                     pixel = pixels[xn, yn]
-                    #  TODO: Generalize this to work with any number of channels
-                    colour[0] += pixel[0] * kernel[a][b]
-                    colour[1] += pixel[1] * kernel[a][b]
-                    colour[2] += pixel[2] * kernel[a][b]
-            draw.point((x, y), (int(colour[0]), int(colour[1]), int(colour[2])))
+                    
+                    # Apply to each channel
+                    for i in range(len(bands)):
+                        colour[i] += pixel[i] * kernel[a][b]
+
+            # If we don't wan't to apply the kernel to the alpha channel, then
+            # retrieve and replace the last value in the tuple with the original
+            if 'A' in bands and not apply_to_alpha:
+                colour = colour[:-1] + [pixels[x, y][-1]]
+
+            # Draw the pixel
+            final_colour = tuple([int(i) for i in colour])
+            draw.point((x, y), final_colour)
     
     # Save and return
     filename = f'kernel-{time()}.png'
@@ -476,9 +527,11 @@ def filter():
     # Get parameters from request and error check
     filter_type = request.args.get('type')
     size = request.args.get('size', 3, int)
+    apply_to_alpha = request.args.get('apply-to-alpha', False)
 
     # Load image
-    pixels, output_img, draw = load_img('lenna.png')
+    inimg, pixels, output_img, draw = new_load_img('dice.png')
+    bands = inimg.getbands()
     w, h = output_img.width, output_img.height
 
     # Error check parameters
@@ -490,24 +543,25 @@ def filter():
     for x in range (w - size + 1):
         for y in range (h - size + 1):
             chunk = [pixels[x+a, y+b] for a in range(size) for b in range(size)]
-            reds = [i[0] for i in chunk]
-            greens = [i[1] for i in chunk]
-            blues = [i[2] for i in chunk]
+            colours = list(zip(*chunk))
 
-            # TODO: Generalize this to work with any number of channels
             # Apply filter
             if filter_type == 'min':
-                colour = (min(reds), min(greens), min(blues))
+                colour = tuple([min(i) for i in colours])
             elif filter_type == 'max':
-                colour = (max(reds), max(greens), max(blues))
+                colour = tuple([max(i) for i in colours])
             elif filter_type == 'median':
-                colour = (median(reds), median(greens), median(blues))
+                colour = tuple([median(i) for i in colours])
+
+            # Check if we need to apply the filter to the alpha channel
+            if 'A' in bands and not apply_to_alpha:
+                colour = colour[:-1] + (pixels[x, y][-1],)
 
             draw.point((x,y), colour)
 
     # Save and return
     output_img.save(f'filter-{filter_type}-{size}x{size}.png')
-    return {'type': filter_type, 'size': size}
+    return {'type': filter_type, 'size': size, 'apply-to-alpha': apply_to_alpha}
 
 
 cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
