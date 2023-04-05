@@ -182,6 +182,7 @@ def scale():
         # Save and return
         output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
         return {'type': 'Nearest Neighbor', 'new-width': w, 'new-height': h}
+    
     # Bilinear scaling
     elif scale_type == 'bl':
         # Load image
@@ -204,7 +205,7 @@ def scale():
                 colour = [-1] * num_channels
 
                 # Calculate bilinear interpolation for each channel
-                for chan in range(num_channels): # loop through RGB channels
+                for chan in range(num_channels):
                     xl, yl = floor(x * x_scale), floor(y * y_scale)
                     xh, yh = ceil(x * x_scale), ceil(y * y_scale)
 
@@ -224,6 +225,7 @@ def scale():
         # Save and return
         output_img.save(f'scale-{scale_type}-w{w}-h{h}.png')
         return {'type': 'Bilinear', 'new-width': w, 'new-height': h}
+
     # Bicubic scaling
     elif scale_type == 'bc':
         return {'type': 'Bicubic', 'err': 'Not implemented'}
@@ -267,29 +269,40 @@ Applies a linear or power map to an image and returns the URL to the image
 """
 @app.route('/map')
 def grayscale_map():
+    # Get parameters from request
     map_type = request.args.get('type')
 
+    # Linear mapping
     if map_type == 'linear':
+        # Get further parameters from request
         alpha = request.args.get('alpha', 1, float)
         beta = request.args.get('beta', 0, float)
         pixels, output_img, draw = load_img('lenna.png')
 
+        # Perform mapping
         for x in range(output_img.width):
             for y in range(output_img.height):
                 color = tuple([int((alpha * px) + beta) for px in pixels[x, y]])
                 draw.point((x, y), color)
 
+        # Save and return
         output_img.save(f'map-{map_type}-alpha{alpha}-beta{beta}.png')
         return {'mapping': map_type, 'alpha': alpha, 'beta': beta}
+    
+    # Power mapping
     elif map_type == 'power':
+        # Get further parameters from request
         gamma = request.args.get('gamma', 1, float)
         L = 256 # TODO: get from image
         pixels, output_img, draw = load_img('lenna.png')
 
+        # Perform mapping
         for x in range(output_img.width):
             for y in range(output_img.height):
                 color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y]])
                 draw.point((x, y), color)
+
+        # Save and return
         output_img.save(f'map-{map_type}-gamma{gamma}.png')
         return {'mapping': map_type, 'gamma': gamma}
 
@@ -299,10 +312,13 @@ Calculates the histogram of an image and returns the histogram
 """
 @app.route('/histogram')
 def calculate_histogram():
+    # Load image
+    # TODO: Generalize this to work with any number of channels
     reds, greens, blues = defaultdict(int), defaultdict(int), defaultdict(int)
     pixels, img, _ = load_img('lenna.png')
 
     # TODO: Generalize this to work with any number of channels
+    # Calculate histogram by iterating over each pixel
     for x in range(img.width):
         for y in range(img.height):
             r, g, b = pixels[x, y]
@@ -323,6 +339,8 @@ Calculates the histogram of the image and applies histogram equalization
 """
 @app.route('/histogram-equalization')
 def equalize_histogram():
+    # Load image
+    # TODO: Generalize this to work with any number of channels
     reds, greens, blues = calculate_histogram().values() # TODO: Figure out how these will work together
     pixels, output_img, draw = load_img('lenna.png')
     nr_pixels = output_img.width * output_img.height
@@ -333,12 +351,13 @@ def equalize_histogram():
     ng = calculate_new_gray_levels(greens, nr_pixels)
     nb = calculate_new_gray_levels(blues, nr_pixels)
 
-    # Apply
+    # Apply equalization
     for x in range(output_img.width):
         for y in range(output_img.height):
             r, g, b = pixels[x, y]
             draw.point((x, y), (nr[r], ng[g], nb[b]))
     
+    # Save and return
     output_img.save(f'equalized.png')
     return {'red': nr, 'green': ng, 'blue': nb}
 
@@ -349,9 +368,12 @@ Calculates the new gray levels for histogram equalization
 :param nr_pixels: The number of pixels in the image
 """
 def calculate_new_gray_levels(graylevels : dict, nr_pixels: int): 
+    # Calculate probability density function and cumulative distribution function
     pdf = {gl : nk / nr_pixels for gl, nk in graylevels.items()}
     pdf = {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}
     cdf = {gl : sum([pdf[i] for i in range(gl + 1)]) for gl in pdf.keys()}
+    
+    # Calculate new gray levels and return
     return {gl : round((256 - 1) * cdf[gl]) for gl in cdf.keys()}
 
 
@@ -362,15 +384,18 @@ Generates salt and pepper noise and returns the URL to the image
 """
 @app.route('/generate-noise')
 def generate_noise():
+    # Get parameters from request and error check
     salt, pepper = request.args.get('salt', 5, float), request.args.get('pepper', 5, float)
     if salt > 100 or pepper > 100 or salt + pepper > 100:
         return {'err': 'Salt and pepper values must be between 0 and 100'}
 
+    # Load image and generate noise seed
     pixels, output_img, draw = load_img('lenna.png')
     timeseed = int(time() * 1000)
     seed(timeseed)
 
     # TODO: Generalize this to work with any number of channels
+    # Generate salt and pepper based on chance
     for x in range(output_img.width):
         for y in range(output_img.height):
             if random() < salt / 100:
@@ -379,8 +404,9 @@ def generate_noise():
                 draw.point((x, y), (0, 0, 0))
             else:
                 draw.point((x, y), pixels[x, y])
-    output_img.save(f'noise-salt{salt}-pepper{pepper}-seed{timeseed}.png')
 
+    # Save and return
+    output_img.save(f'noise-salt{salt}-pepper{pepper}-seed{timeseed}.png')
     return {'salt': salt, 'pepper': pepper, 'seed': timeseed}
 
 # TOOD: Implement setting type of kernel (sobel, low pass etc.)
@@ -394,6 +420,7 @@ Applies a kernel to an image and returns the URL to the image
 """
 @app.route('/kernel', methods=['POST'])
 def kernel():
+    # Check if there is data in the body
     try:
         data = request.get_json()
     except:
@@ -415,22 +442,26 @@ def kernel():
     kernel = [[float(Fraction(i)) for i in j] for j in kernel]
 
     # TODO: Generalize this to work with any number of channels
+    # Apply kernel
     pixels, output_img, draw = load_img('lenna.png')
     offset = len(kernel) // 2
     for x in range(offset, output_img.width - offset):
         for y in range(offset, output_img.height - offset):
+            # TODO: Generalize this to work with any number of channels
             colour = [0, 0, 0]
             for a in range(len(kernel)):
                 for b in range(len(kernel)):
                     xn = x + a - offset
                     yn = y + b - offset
                     pixel = pixels[xn, yn]
+                    #  TODO: Generalize this to work with any number of channels
                     colour[0] += pixel[0] * kernel[a][b]
                     colour[1] += pixel[1] * kernel[a][b]
                     colour[2] += pixel[2] * kernel[a][b]
             draw.point((x, y), (int(colour[0]), int(colour[1]), int(colour[2])))
-    filename = f'kernel-{time()}.png'
     
+    # Save and return
+    filename = f'kernel-{time()}.png'
     output_img.save(filename)
     return {'path': '/kernel', 'filename': filename, 'kernel': kernel}
 
@@ -442,12 +473,15 @@ The filter can be a custom square size, but defaults to 3x3.
 """
 @app.route('/filter')
 def filter():
+    # Get parameters from request and error check
     filter_type = request.args.get('type')
     size = request.args.get('size', 3, int)
 
+    # Load image
     pixels, output_img, draw = load_img('lenna.png')
     w, h = output_img.width, output_img.height
 
+    # Error check parameters
     if filter_type not in ['min', 'max', 'median']:
         return {'type': filter, 'size': size, 'err': 'Invalid filter type'}
 
@@ -461,6 +495,7 @@ def filter():
             blues = [i[2] for i in chunk]
 
             # TODO: Generalize this to work with any number of channels
+            # Apply filter
             if filter_type == 'min':
                 colour = (min(reds), min(greens), min(blues))
             elif filter_type == 'max':
@@ -469,6 +504,8 @@ def filter():
                 colour = (median(reds), median(greens), median(blues))
 
             draw.point((x,y), colour)
+
+    # Save and return
     output_img.save(f'filter-{filter_type}-{size}x{size}.png')
     return {'type': filter_type, 'size': size}
 
