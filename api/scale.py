@@ -3,6 +3,11 @@ from PIL.Image import Image
 from api.common import get_image_pixels, get_new_image_writables
 from math import floor, ceil
 
+
+def scale(img: Image, params: dict) -> Image:
+    pass
+
+
 def nearest_neighbour(img: Image, params: dict) -> Image:
     """
     Scale an image using nearest neighbour scaling

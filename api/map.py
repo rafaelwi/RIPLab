@@ -2,6 +2,30 @@
 from PIL.Image import Image
 from api.common import get_image_writables
 
+def map(img : Image, params : dict) -> Image:
+    """
+    Maps a function to an image
+    :param img: The image to map
+    :param params: The parameters to map the image with. Must contain
+    function key
+    """
+    pass
+    # # Get parameters
+    # function = params['function']
+
+    # # Load image
+    # pixels, new_img, draw = get_image_writables(img)
+
+    # # Map image
+    # for x in range(img.width):
+    #     for y in range(img.height):
+    #         color = tuple([function(px) for px in pixels[x, y]])
+    #         draw.point((x, y), color)
+
+    # # Save and return
+    # return new_img
+
+
 def linear_map(img : Image, params : dict) -> Image:
     """
     Maps a linear function to an image
