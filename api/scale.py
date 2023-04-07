@@ -5,7 +5,18 @@ from math import floor, ceil
 
 
 def scale(img: Image, params: dict) -> Image:
-    pass
+    """
+    Scales an image using the given scaling algorithm
+    :param img: The image to scale
+    :param params: The parameters to scale the image with. Must
+    contain w, h, and type keys
+    """
+    if params['type'] == 'nn':
+        return nearest_neighbour(img, params)
+    elif params['type'] == 'bl':
+        return bilinear(img, params)
+    elif params['type'] == 'bc':
+        return bicubic(img, params)
 
 
 def nearest_neighbour(img: Image, params: dict) -> Image:

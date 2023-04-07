@@ -10,7 +10,7 @@ def histogram(img : Image) -> dict:
     :return: The histogram
     """
     # Load image
-    pixels, = get_image_pixels(img)
+    pixels = get_image_pixels(img)
     bands = img.getbands()
     channels = {band: defaultdict(int) for band in bands}
 

@@ -29,11 +29,19 @@ def linear_map(img : Image, params : dict) -> Image:
     # Load image
     pixels, new_img, draw = get_image_writables(img)
 
-    # Map image
-    for x in range(img.width):
-        for y in range(img.height):
-            color = tuple([int((alpha * px) + beta) for px in pixels[x, y]])
-            draw.point((x, y), color)
+    # If the image has an alpha channel, ignore it when mapping
+    if 'A' in img.getbands():
+        # Map image
+        for x in range(img.width):
+            for y in range(img.height):
+                color = tuple([int((alpha * px) + beta) for px in pixels[x, y][:-1]] + [pixels[x, y][-1]])
+                draw.point((x, y), color)
+    else:
+        # Map image
+        for x in range(img.width):
+            for y in range(img.height):
+                color = tuple([int((alpha * px) + beta) for px in pixels[x, y]])
+                draw.point((x, y), color)
 
     # Save and return
     return new_img
@@ -53,11 +61,20 @@ def power_map(img : Image, params : dict) -> Image:
     L = 256 # TODO: Get this from the image or make a dict with all the L values
             #       based on the image's mode
 
-    # Map image
-    for x in range(img.width):
-        for y in range(img.height):
-            color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y]])
-            draw.point((x, y), color)
+
+    # If the image has an alpha channel, ignore it when mapping
+    if 'A' in img.getbands():
+        # Map image
+        for x in range(img.width):
+            for y in range(img.height):
+                color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y][:-1]] + [pixels[x, y][-1]])
+                draw.point((x, y), color)
+    else:
+        # Map image
+        for x in range(img.width):
+            for y in range(img.height):
+                color = tuple([int((L - 1) * ((px / (L - 1)) ** gamma)) for px in pixels[x, y]])
+                draw.point((x, y), color)
 
     # Save and return
     return new_img

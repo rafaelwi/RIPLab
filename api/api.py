@@ -62,7 +62,6 @@ def generate_filename():
 @app.route('/rotate', methods=['GET', 'POST'])
 @app.route('/crop', methods=['GET', 'POST'])
 @app.route('/scale', methods=['GET', 'POST'])
-@app.route('/rotate', methods=['GET', 'POST'])
 @app.route('/map', methods=['GET', 'POST'])
 @app.route('/histogram', methods=['GET', 'POST'])
 @app.route('/histogram-equalization', methods=['GET', 'POST'])
@@ -70,7 +69,7 @@ def generate_filename():
 @app.route('/filter', methods=['GET', 'POST'])
 @app.route('/kernel', methods=['GET', 'POST'])
 def dispatch():
-    operation = request.path.replace('/', '')
+    operation = request.path.replace('/', '') 
     method = request.method
     print (f'Operation: {operation}, Method: {method}')
 
@@ -120,16 +119,12 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
     validated_params['ext'] = validated_params['url'].split('.')[-1]
     
     # Crop validation: check that all parameters are present and valid
-    if operation == 'crop':
-        # Ensure that all parameters are present
-        if not all(['x', 'y', 'w', 'h']) in params:
-            return False, {}, 'Missing parameters'
-        
+    if operation == 'crop':        
         # Get parameters
-        validated_params['x'] = params.get('x', 0, int)
-        validated_params['y'] = params.get('y', 0, int)
-        validated_params['w'] = params.get('w', 1, int)
-        validated_params['h'] = params.get('h', 1, int)
+        validated_params['x'] = int(params.get('x', 0))
+        validated_params['y'] = int(params.get('y', 0))
+        validated_params['w'] = int(params.get('w', 1))
+        validated_params['h'] = int(params.get('h', 1))
 
         # Check that the crop is within the image bounds
         img_size = Image.open(validated_params['url']).size
@@ -149,12 +144,12 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
         
         # Set other parameters based on scaling type
         validated_params['type'] = scale_type
-        validated_params['w'] = params.get('w', 1, int)
-        validated_params['h'] = params.get('h', 1, int)
+        validated_params['w'] = int(params.get('w', 1))
+        validated_params['h'] = int(params.get('h', 1))
     
     # Rotation validation
     elif operation == 'rotate':
-        validated_params['deg'] = params.get('deg', 0, int)
+        validated_params['deg'] = float(params.get('deg', 0))
     
     # Map validation
     elif operation == 'map':
@@ -169,20 +164,20 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
         
         # Set other parameters based on map type
         if validated_params['type'] == 'linear':
-            validated_params['alpha'] = params.get('alpha', 1, int)
-            validated_params['beta'] = params.get('beta', 0, int)
+            validated_params['alpha'] = float(params.get('alpha', 1))
+            validated_params['beta'] = float(params.get('beta', 0))
         elif validated_params['type'] == 'power':
-            validated_params['gamma'] = params.get('gamma', 1, int)
+            validated_params['gamma'] = float(params.get('gamma', 1))
     
     # Histogram validation
     elif operation == 'histogram-equalization':
-        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False, bool)
+        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False)
     
     # Noise generation validation
     elif operation == 'generate-noise':
-        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False, bool)
-        validated_params['salt_chance'] = params.get('salt-chance', 5, float)
-        validated_params['pepper_chance'] = params.get('pepper-chance', 5, float)
+        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False)
+        validated_params['salt_chance'] = float(params.get('salt-chance', 5))
+        validated_params['pepper_chance'] = float(params.get('pepper-chance', 5))
     
     # Filter validation
     elif operation == 'filter':
@@ -195,12 +190,12 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
         
         # Get other parameters
         validated_params['type'] = filter_type
-        validated_params['size'] = params.get('size', 3, int)
-        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False, bool)
+        validated_params['size'] = int(params.get('size', 3))
+        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False)
     
     # Kernel validation
     elif operation == 'kernel':
-        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False, bool)
+        validated_params['apply_to_alpha'] = params.get('apply-to-alpha', False)
         kernel = params.get('kernel')
 
         # Check if kernel is a valid matrix

@@ -29,7 +29,7 @@ def generate_noise(img: Image, params: dict) -> Image:
         pepper = tuple([0] * (nr_bands - 1))
     else:
         salt = tuple([255] * nr_bands)
-        pepper = tuple([0] * nr_bands)
+        pepper = tuple([0] * (nr_bands - 1) + [255])
 
         # Generate salt and pepper based on chance
     for x in range(img.width):

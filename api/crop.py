@@ -10,11 +10,11 @@ def crop(img: Image, params: dict) -> Image:
     contain x, y, w, and h keys
     """
     # Get parameters
-    topleft = tuple(params['x'], params['y'])
+    topleft = (params['x'], params['y'])
     w, h = params['w'], params['h']
 
     # Load image and prepare output image
-    pixels, = get_image_pixels(img)
+    pixels = get_image_pixels(img)
     new_img, draw = get_new_image_writables(w, h, img.mode)
 
     # Crop image
