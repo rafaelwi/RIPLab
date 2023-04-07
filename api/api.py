@@ -16,8 +16,9 @@ from scale import scale
 from shear import shear
 
 app = Flask(__name__)
-
 UPLOAD_FOLDER = 'uploads/'
+cors = CORS(app, resources={'/*':{'origins': 'http://localhost:3000'}}) 
+
 
 """
 Uploads an image to the server and returns the URL to the image
@@ -267,3 +268,7 @@ def save_image(img: Image.Image, ext: str) -> str:
 
     # Return the filename
     return filename
+
+
+if __name__ == "__main__":
+    app.run()
