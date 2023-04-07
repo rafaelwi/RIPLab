@@ -13,6 +13,7 @@ from kernel import kernel
 from map import map
 from rotate import rotate
 from scale import scale
+from shear import shear
 
 app = Flask(__name__)
 
@@ -68,6 +69,7 @@ def generate_filename():
 @app.route('/generate-noise', methods=['GET', 'POST'])
 @app.route('/filter', methods=['GET', 'POST'])
 @app.route('/kernel', methods=['GET', 'POST'])
+@app.route('/shear', methods=['GET', 'POST'])
 def dispatch():
     operation = request.path.replace('/', '') 
     method = request.method
@@ -208,6 +210,17 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
         # Convert kernel values to floats
         kernel = [[float(Fraction(i)) for i in j] for j in kernel]
         validated_params['kernel'] = kernel
+    
+    # Shear validation
+    elif operation == 'shear':
+        direction = params.get('direction')
+        if direction is None:
+            return False, {}, 'Missing shear direction'
+        if direction not in ['horizontal', 'vertical']:
+            return False, {}, 'Invalid shear direction'
+        
+        validated_params['direction'] = direction
+        validated_params['deg'] = float(params.get('deg', 0))
 
     return True, validated_params, ''
 
@@ -236,6 +249,8 @@ def call_operation(operation, img, params) -> Image.Image:
         return rotate(img, params)
     elif operation == 'scale':
         return scale(img, params)
+    elif operation == 'shear':
+        return shear(img, params)
 
 
 def save_image(img: Image.Image, ext: str) -> str:
