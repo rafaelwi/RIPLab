@@ -65,12 +65,12 @@ def histogram_equalization(img : Image, params: dict) -> Image:
     return new_img
 
 
-"""
-Calculates the new gray levels for histogram equalization
-:param graylevels: The histogram of the image
-:param nr_pixels: The number of pixels in the image
-"""
 def calculate_new_gray_levels(graylevels : dict, nr_pixels: int): 
+    """
+    Calculates the new gray levels for histogram equalization
+    :param graylevels: The histogram of the image
+    :param nr_pixels: The number of pixels in the image
+    """
     # Calculate probability density function and cumulative distribution function
     pdf = {gl : nk / nr_pixels for gl, nk in graylevels.items()}
     pdf = {k: v for k, v in sorted(pdf.items(), key=lambda item: item[0])}

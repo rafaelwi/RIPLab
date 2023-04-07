@@ -5,6 +5,11 @@ from math import tan, pi
 
 
 def shear(img : Image, params : dict) -> Image:
+    """
+    Shears an image in a given direction by a given angle.
+    :param img: The image to shear.
+    :param params: A dictionary containing the parameters for the shear.
+    """
     if params['direction'] == 'vertical':
         return vertical_sheer(img, params)
     elif params['direction'] == 'horizontal':
@@ -12,6 +17,11 @@ def shear(img : Image, params : dict) -> Image:
     
 
 def vertical_sheer(img : Image, params : dict) -> Image:
+    """
+    Vertically shears an image by a given angle.
+    :param img: The image to shear.
+    :param params: A dictionary containing the parameters for the shear.
+    """
     # Get parameters
     angle = params['deg'] * (pi / 180.0)
     shear_factor = -tan(angle)
@@ -43,6 +53,11 @@ def vertical_sheer(img : Image, params : dict) -> Image:
 
 
 def horizontal_sheer(img : Image, params : dict) -> Image:
+    """
+    Horizontally shears an image by a given angle.
+    :param img: The image to shear.
+    :param params: A dictionary containing the parameters for the shear.
+    """
     # Get parameters
     angle = params['deg'] * (pi / 180.0)
     shear_factor = -tan(angle)
