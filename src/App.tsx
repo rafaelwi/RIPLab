@@ -104,18 +104,7 @@ class App extends React.Component<{}, { imageURL: string }> {
         }}
       >
         <ResizableColumns
-          left={
-            // <OperationMenu
-            //   buttons={[
-            //     { label: 'Button 1' },
-            //     { label: 'Button 2' },
-            //     { label: 'Button 3' },
-            //     { label: 'Button 4' },
-            //     { label: 'Button 5' },
-            //   ]}
-            // />
-            <DropdownList items={this.dropdownItems} />
-          }
+          left={<DropdownList items={this.dropdownItems} />}
           right={<h1>Hello World Right</h1>}
         />
       </div>

@@ -5,3 +5,49 @@
 .dropdown-content :hover {
     all: revert;
 }
+
+.dropdown-header {
+    position: sticky;
+    top: 0px;
+    padding: 4px 12px;
+    background: white;
+    border-bottom: 1px black solid;
+    text-align: center;
+}
+
+.dropdown-footer {
+    position: sticky;
+    bottom: 0px;
+    padding: 4px 12px;
+    background: white;
+    border-top: 1px black solid;
+    text-align: center;
+}
+
+.header-title {
+    margin-bottom: 0px;
+}
+
+.header-subtitle {
+    margin-top: 0px;
+}
+
+.header-subtitle b {
+    font-size: 1.2em;
+    color: red;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    position: relative;
+    display: inline-block;
+}
+
+.btn :hover{
+    background-color: #d3d3d3;
+    border-radius: 5px;
+}
