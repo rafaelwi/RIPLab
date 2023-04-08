@@ -1,0 +1,7 @@
+.dropdown-item :hover {
+    background-color: #d3d3d3;
+}
+
+.dropdown-content :hover {
+    all: revert;
+}
