@@ -16,21 +16,22 @@ const Dropdown = ({ title, content, icon }: DropdownProps) => {
   };
 
   return (
-    <div className="dropdown-item"
-      onClick={handleToggle}
-      style={{ 
-        marginBottom: '16px',
-        display: 'flex',
-        flexFlow: 'row wrap',
-        cursor: 'pointer',
-        flexDirection: 'column'
-    }}>
-      <div style={{display: 'flex', alignItems: 'baseline', textAlign: 'center'}}>
-        <div style={{display: 'block', margin: 'auto 10px auto 0'}}>{icon}</div>
-        <h3 style={{}}>{title}</h3>
+    <div className="dropdown">
+      <div className="dropdown-item"
+        onClick={handleToggle}
+        style={{ 
+          display: 'flex',
+          flexFlow: 'row wrap',
+          cursor: 'pointer',
+          flexDirection: 'column'
+      }}>
+        <div style={{display: 'flex', alignItems: 'baseline', textAlign: 'center'}}>
+          <div style={{display: 'block', margin: 'auto 10px auto 0'}}>{icon}</div>
+          <h3 style={{}}>{title}</h3>
 
-        <div style={{marginLeft: 'auto'}}>
-          {isOpen ? <GoChevronUp /> : <GoChevronDown />}
+          <div style={{marginLeft: 'auto'}}>
+            {isOpen ? <GoChevronUp /> : <GoChevronDown />}
+          </div>
         </div>
       </div>
 
@@ -40,6 +41,7 @@ const Dropdown = ({ title, content, icon }: DropdownProps) => {
             backgroundColor: "#fff",
             padding: "8px",
             border: "1px solid #ccc",
+            marginBottom: '16px',
           }}
         >
           {content}
