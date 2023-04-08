@@ -15,33 +15,47 @@ interface DropdownItem {
   icon?: React.ReactNode;
 }
 
-class App extends React.Component<{}, { imageURL: string }> {
-  uploadInput: any;
+interface EditedImage {
+  url: string;
+}
 
-  constructor(props: any) {
+class App extends React.Component<{}, EditedImage> {
+
+  constructor(props: {}) {
     super(props);
-
     this.state = {
-      imageURL: 'http://localhost:4720/uploads/missing.png',
+      url: 'http://localhost:4720/uploads/missing.png',
     };
-
-    this.handleUploadImage = this.handleUploadImage.bind(this);
   }
 
-  handleUploadImage(ev: { preventDefault: () => void; }) {
-    ev.preventDefault();
-    const data = new FormData();
-    data.append('file', this.uploadInput.files[0]);
-
-    fetch('http://localhost:4720/upload', {
-      method: 'POST',
-      body: data,
-    }).then((response) => {
-      response.json().then((body) => {
-        this.setState({ imageURL: body.url });
-      });
-    });
+  setImageURL = (url: string) => {
+    this.setState({ url });
   }
+
+  // constructor(props: any) {
+  //   super(props);
+
+  //   this.state = {
+  //     imageURL: 'http://localhost:4720/uploads/missing.png',
+  //   };
+
+  //   // this.handleUploadImage = this.handleUploadImage.bind(this);
+  // }
+
+  // handleUploadImage(ev: { preventDefault: () => void; }) {
+  //   ev.preventDefault();
+  //   const data = new FormData();
+  //   data.append('file', this.uploadInput.files[0]);
+
+  //   fetch('http://localhost:4720/upload', {
+  //     method: 'POST',
+  //     body: data,
+  //   }).then((response) => {
+  //     response.json().then((body) => {
+  //       this.setState({ imageURL: body.url });
+  //     });
+  //   });
+  // }
 
   dropdownItems: DropdownItem[] = [
     {
@@ -104,7 +118,7 @@ class App extends React.Component<{}, { imageURL: string }> {
         }}
       >
         <ResizableColumns
-          left={<DropdownList items={this.dropdownItems} />}
+          left={<DropdownList items={this.dropdownItems} url={this.state.url} setImageURL={this.setImageURL}/>}
           right={<h1>Hello World Right</h1>}
         />
       </div>

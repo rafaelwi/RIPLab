@@ -12,6 +12,11 @@ interface DropdownProps {
   icon?: React.ReactNode;
 }
 
+interface EditedImage {
+  url: string;
+  setImageURL: (url: string) => void;
+}
+
 const Dropdown = ({ title, content, icon }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -55,19 +60,67 @@ const Dropdown = ({ title, content, icon }: DropdownProps) => {
   );
 };
 
+
+const handleUploadImage = (ev: { preventDefault: () => void; }) => {
+  ev.preventDefault();
+  
+  let uploadInput: any;
+  const data = new FormData();
+  data.append('file', uploadInput.files[0]);
+
+  fetch('http://localhost:4720/upload', {
+    method: 'POST',
+    body: data,
+  }).then((response) => {
+    response.json().then((body) => {
+      // this.setState({ imageURL: body.url });
+    });
+  });
+};
+
+const uploaded = (event: React.ChangeEvent<HTMLInputElement>) => {
+  event.preventDefault();
+  console.log('something uploaded')
+  console.log(event)
+}
 interface DropdownListProps {
   items: DropdownProps[];
+  url: string;
+  setImageURL: (url: string) => void;
 }
 
-const DropdownList = ({ items }: DropdownListProps) => {
+function DropdownList (props: DropdownListProps) {
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+      const formData = new FormData();
+      formData.append('file', event.target.files[0]);
+      fetch('http://localhost:4720/upload', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          props.setImageURL(data.url);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  };
+
   return (
     <div>
       <div className="dropdown-header">
         <h2 className="header-title">RIPLab</h2>
         <h4 className="header-subtitle"><b>R</b>afael's <b>I</b>mage <b>P</b>rocessing <b>Lab</b></h4>
+
         <div className="header-buttons">
           <div className="btn" title="Upload Image">
-            <AiOutlineUpload size={42}/>
+            <input type="file" id="img-upload" accept="image*/" onChange={handleFileUpload} hidden/>
+            <label htmlFor="img-upload" ><AiOutlineUpload size={42}/></label>
           </div>
           <div className="btn" title="Download Image">
             <AiOutlineDownload size={42}/>
@@ -84,7 +137,7 @@ const DropdownList = ({ items }: DropdownListProps) => {
         </div>
       </div>
       <div style={{margin: '8px'}}>
-        {items.map((item, index) => (
+        {props.items.map((item, index) => (
           <Dropdown key={index} {...item} />
         ))}
       </div>

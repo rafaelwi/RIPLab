@@ -11,16 +11,7 @@
     top: 0px;
     padding: 4px 12px;
     background: white;
-    border-bottom: 1px black solid;
-    text-align: center;
-}
-
-.dropdown-footer {
-    position: sticky;
-    bottom: 0px;
-    padding: 4px 12px;
-    background: white;
-    border-top: 1px black solid;
+    border-bottom: 1px solid #c7c7c7;
     text-align: center;
 }
 
@@ -40,6 +31,7 @@
 .header-buttons {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .btn {
