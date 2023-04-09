@@ -83,34 +83,27 @@ function DropdownList (props: DropdownListProps) {
   };
 
   return (
-    <div>
-      <div className="dropdown-header">
-        <h2 className="header-title">RIPLab</h2>
-        <h4 className="header-subtitle"><b>R</b>afael's <b>I</b>mage <b>P</b>rocessing <b>Lab</b></h4>
+    <div className="dropdown-header">
+      <h2 className="header-title">RIPLab</h2>
+      <h4 className="header-subtitle"><b>R</b>afael's <b>I</b>mage <b>P</b>rocessing <b>Lab</b></h4>
 
-        <div className="header-buttons">
-          <div className="btn" title="Upload Image">
-            <input type="file" id="img-upload" accept="image*/" onChange={handleFileUpload} hidden/>
-            <label htmlFor="img-upload" ><AiOutlineUpload size={42}/></label>
-          </div>
-          <div className="btn" title="Download Image">
-            <AiOutlineDownload size={42}/>
-          </div>
-          <div className="btn" title="Reset Image">
-            <MdOutlineRestorePage size={42}/>
-          </div>
-          <div className="btn" title="Undo">
-            <BiUndo size={42}/>
-          </div>
-          <div className="btn" title="Redo">
-            <BiRedo size={42}/>
-          </div>
+      <div className="header-buttons">
+        <div className="btn" title="Upload Image">
+          <input type="file" id="img-upload" accept="image*/" onChange={handleFileUpload} hidden/>
+          <label htmlFor="img-upload" ><AiOutlineUpload size={42}/></label>
         </div>
-      </div>
-      <div style={{margin: '8px'}}>
-        {props.items.map((item, index) => (
-          <Dropdown key={index} {...item} />
-        ))}
+        <div className="btn" title="Download Image">
+          <AiOutlineDownload size={42}/>
+        </div>
+        <div className="btn" title="Reset Image">
+          <MdOutlineRestorePage size={42}/>
+        </div>
+        <div className="btn" title="Undo">
+          <BiUndo size={42}/>
+        </div>
+        <div className="btn" title="Redo">
+          <BiRedo size={42}/>
+        </div>
       </div>
     </div>
   );

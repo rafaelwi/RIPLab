@@ -3,6 +3,14 @@ from PIL.Image import Image
 from common import get_image_pixels, get_image_writables
 from collections import defaultdict
 
+STROKE_COLOURS = {
+    'R': '#ff0000',
+    'G': '#00ff00',
+    'B': '#0000ff',
+    'L': '#808080',
+    'A': '#000000'
+}
+
 def histogram(img : Image) -> tuple[dict, list, list]:
     """
     Get the histogram for an image
@@ -33,7 +41,16 @@ def histogram(img : Image) -> tuple[dict, list, list]:
             })
 
     # Create the series object for the histogram plot
-    series = [{'xKey': 'grayscale', 'yKey': band, 'yName': band} for band in bands]
+    series = [{
+                'xKey': 'grayscale', 
+                'yKey': band, 
+                'yName': band,
+                'stroke': STROKE_COLOURS[band],
+                'marker': {
+                    'fill': STROKE_COLOURS[band],
+                    'stroke': STROKE_COLOURS[band]
+                }
+            } for band in bands]
 
     # Return histogram
     return channels, channels_flat, series
