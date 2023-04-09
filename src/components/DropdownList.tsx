@@ -45,14 +45,7 @@ const Dropdown = ({ title, content, icon }: DropdownProps) => {
       </div>
 
       {isOpen && (
-        <div className="dropdown-content"
-          style={{
-            backgroundColor: "#fff",
-            padding: "8px",
-            border: "1px solid #ccc",
-            marginBottom: '16px',
-          }}
-        >
+        <div className="dropdown-content">
           {content}
         </div>
       )}

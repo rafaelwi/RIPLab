@@ -1,0 +1,27 @@
+.img-operation {
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 16px;
+}
+
+.operation-btn {
+    display: flex; 
+    align-items: baseline; 
+    text-align: center;
+    padding-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.operation-btn:not(:last-child) { 
+    margin-bottom: 4px;
+}
+
+.img-operation:hover .operation-btn:hover {
+    background-color: #d3d3d3;
+}
+
+.operation-icon {
+    display: block; 
+    margin: auto 10px auto 0
+}

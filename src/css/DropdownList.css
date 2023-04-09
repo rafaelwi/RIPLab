@@ -2,9 +2,9 @@
     background-color: #d3d3d3;
 }
 
-.dropdown-content :hover {
+/* .dropdown-content :hover {
     all: revert;
-}
+} */
 
 .dropdown-header {
     position: sticky;
