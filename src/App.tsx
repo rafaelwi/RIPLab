@@ -16,6 +16,7 @@ import LinearMap from './components/LinearMap';
 import PowerLaw from './components/PowerLaw';
 import Histogram from './components/Histogram';
 import HistogramEqualization from './components/HistogramEqualization';
+import NonLinearFilter from './components/NonLinearFilter';
 
 
 interface DropdownItem {
@@ -89,7 +90,7 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Non-Linear Filter",
-        content: <div>Content for Dropdown 1</div>,
+        content: <NonLinearFilter imageURL={this.state.url}/>,
         icon: <IoFilterSharp size={28} />
       }
     ];
