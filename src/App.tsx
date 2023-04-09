@@ -8,6 +8,7 @@ import { MdFlip, MdOutlinePhotoSizeSelectLarge, MdOutlineRotate90DegreesCw } fro
 import './App.css';
 import DropdownList from './components/DropdownList';
 import ResizableColumns from './components/ResizableColumns';
+import ImageView from './components/ImageView';
 
 interface DropdownItem {
   title: string;
@@ -119,7 +120,7 @@ class App extends React.Component<{}, EditedImage> {
       >
         <ResizableColumns
           left={<DropdownList items={this.dropdownItems} url={this.state.url} setImageURL={this.setImageURL}/>}
-          right={<h1>Hello World Right</h1>}
+          right={<ImageView imageURL={this.state.url} />}
         />
       </div>
     );
