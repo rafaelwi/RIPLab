@@ -8,7 +8,8 @@ STROKE_COLOURS = {
     'G': '#00ff00',
     'B': '#0000ff',
     'L': '#808080',
-    'A': '#000000'
+    'A': '#c0c0c0',
+    '1': '#000000'
 }
 
 def histogram(img : Image) -> tuple[dict, list, list]:
@@ -24,11 +25,18 @@ def histogram(img : Image) -> tuple[dict, list, list]:
     channels_flat = []
 
     # Calculate histogram by iterating over each pixel and band
-    for x in range(img.width):
-        for y in range(img.height):
-            colour = pixels[x, y]
-            for i, band in enumerate(bands):
-                channels[band][colour[i]] += 1
+    if len(bands) == 1:
+        for x in range(img.width):
+            for y in range(img.height):
+                colour = pixels[x, y]
+                for i, band in enumerate(bands):
+                    channels[band][colour] += 1
+    else:
+        for x in range(img.width):
+            for y in range(img.height):
+                colour = pixels[x, y]
+                for i, band in enumerate(bands):
+                    channels[band][colour[i]] += 1
 
     # Set default values for missing keys, and flatten histogram
     # TODO: Generalize this to work with any number bits

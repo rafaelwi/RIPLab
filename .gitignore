@@ -194,3 +194,4 @@ cython_debug/
 # Images
 *.png
 !missing.png
+api/uploads/*
