@@ -54,3 +54,13 @@
     margin-right: 10px;
     margin-bottom: 0px;
 }
+
+.label-left {
+    width: 55px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.flex-reverse {
+    flex-direction: row-reverse;
+}

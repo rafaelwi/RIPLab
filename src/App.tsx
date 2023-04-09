@@ -11,6 +11,7 @@ import ResizableColumns from './components/ResizableColumns';
 import ImageView from './components/ImageView';
 import Flip from './components/Flip';
 import Scale from './components/Scale';
+import Rotate from './components/Rotate';
 
 
 interface DropdownItem {
@@ -54,7 +55,7 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Rotate",
-        content: <div>Content for Dropdown 1</div>,
+        content: <Rotate imageURL={this.state.url}/>,
         icon: <MdOutlineRotate90DegreesCw size={28} />
       },
       {
