@@ -19,6 +19,9 @@ import Histogram from './components/Histogram';
 import HistogramEqualization from './components/HistogramEqualization';
 import NonLinearFilter from './components/NonLinearFilter';
 import Convolution from './components/Convolution';
+import SaltPepper from './components/SaltPepper';
+import { TbPolygon, TbSalt } from 'react-icons/tb';
+import Shear from './components/Shear';
 
 
 interface DropdownItem {
@@ -90,9 +93,19 @@ class App extends React.Component<{}, EditedImage> {
         icon: <BsGrid3X3Gap size={28} />
       },
       {
+        title: "Salt and Pepper Noise",
+        content: <SaltPepper imageURL={this.state.url}/>,
+        icon: <TbSalt size={28} />
+      },
+      {
         title: "Non-Linear Filter",
         content: <NonLinearFilter imageURL={this.state.url}/>,
         icon: <IoFilterSharp size={28} />
+      },
+      {
+        title: "Shear",
+        content: <Shear imageURL={this.state.url}/>,
+        icon: <TbPolygon size={28} />
       }
     ];
   }
