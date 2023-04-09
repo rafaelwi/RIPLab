@@ -13,6 +13,11 @@ function Convolution(props: ImageOperationsProps) {
             <textarea name="kernel" id="kernel" cols={30} rows={10} placeholder='0 -1 0&#10;-1 5 -1&#10;0 -1 0'></textarea>
         </div>
 
+        <div className='operation-item kernel'>
+          <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
+          <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+        </div>
+
         <div className='operation-action'>
             <h3>Map</h3>
         </div>

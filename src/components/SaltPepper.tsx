@@ -18,6 +18,11 @@ function SaltPepper(props: ImageOperationsProps) {
             <input type="number" id="pepper" name="pepper" placeholder='pepper'/>
         </div>
 
+        <div className='operation-item kernel'>
+          <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
+          <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+        </div>
+
         <div className='operation-action'>
             <h3>Generate Noise</h3>
         </div>

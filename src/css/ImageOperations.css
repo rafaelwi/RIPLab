@@ -61,6 +61,11 @@
     margin-bottom: 0px;
 }
 
+.label-checkbox {
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
 .flex-reverse {
     flex-direction: row-reverse;
 }
@@ -79,4 +84,13 @@
     border-radius: 5px;
     border: 1px solid #ccc;
     padding: 8px;
+}
+
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+
+input[type=radio] {
+    transform: scale(1.5);
+    margin-bottom: 6px;
 }

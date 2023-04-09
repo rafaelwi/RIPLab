@@ -59,6 +59,12 @@ class ResizableColumns extends React.Component<ColumnProps, ColumnsState> {
         isResizing: false
       })
     };
+
+    handle.ondblclick = (e: MouseEvent) => {
+      self.setState({
+        offset: container.offsetWidth - 300
+      })
+    }
   }
 
   render() {

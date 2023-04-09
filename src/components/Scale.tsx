@@ -23,11 +23,11 @@ function Scale(props: ImageOperationsProps) {
             <h3 style={{marginTop: '0px', marginBottom: '4px'}}>Method</h3>
             <div>
                 <input type="radio" id="nn" name="method" value="30"/>
-                <label htmlFor="nn">Nearest Neighbour</label>
+                <label htmlFor="nn" className='label-checkbox'>Nearest Neighbour</label>
             </div>
             <div>
                 <input type="radio" id="bl" name="method" value="60"/>
-                <label htmlFor="bl">Bilinear</label>
+                <label htmlFor="bl" className='label-checkbox'>Bilinear</label>
             </div>
         </div>
 
