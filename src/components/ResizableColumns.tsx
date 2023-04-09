@@ -47,8 +47,13 @@ class ResizableColumns extends React.Component<ColumnProps, ColumnsState> {
     document.onmousemove = (e: MouseEvent) => {
       if (!self.state.isResizing) return;
       
-      const offset = container.offsetWidth - (e.clientX - container.offsetLeft);
-      
+      var offset = container.offsetWidth - (e.clientX - container.offsetLeft);
+      const windowWidth = window.innerWidth;
+      console.log(offset, windowWidth)
+
+      if (offset >= windowWidth - self.state.minOffset) 
+        offset = windowWidth - self.state.minOffset;
+
       self.setState({
         offset: offset <= self.state.minOffset ? self.state.minOffset : offset
       })
