@@ -10,6 +10,8 @@ import DropdownList from './components/DropdownList';
 import ResizableColumns from './components/ResizableColumns';
 import ImageView from './components/ImageView';
 import Flip from './components/Flip';
+import Scale from './components/Scale';
+
 
 interface DropdownItem {
   title: string;
@@ -47,7 +49,7 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Scale",
-        content: <div style={{ height: '500px' }}>Content for Dropdown 3</div>,
+        content: <Scale imageURL={this.state.url}/>,
         icon: <MdOutlinePhotoSizeSelectLarge size={28} />
       },
       {
