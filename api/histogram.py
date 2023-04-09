@@ -3,7 +3,7 @@ from PIL.Image import Image
 from common import get_image_pixels, get_image_writables
 from collections import defaultdict
 
-def histogram(img : Image) -> tuple[dict, list]:
+def histogram(img : Image) -> tuple[dict, list, list]:
     """
     Get the histogram for an image
     :param img: The image to get the histogram for
@@ -28,13 +28,15 @@ def histogram(img : Image) -> tuple[dict, list]:
         for band in bands:
             channels[band][i]
             channels_flat.append({
-                'channel': band,
                 'grayscale': i,
-                'count': channels[band][i]
+                band: channels[band][i]
             })
 
+    # Create the series object for the histogram plot
+    series = [{'xKey': 'grayscale', 'yKey': band, 'yName': band} for band in bands]
+
     # Return histogram
-    return channels, channels_flat
+    return channels, channels_flat, series
 
 
 def histogram_equalization(img : Image, params: dict) -> Image:

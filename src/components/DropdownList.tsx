@@ -67,10 +67,14 @@ function DropdownList (props: DropdownListProps) {
       fetch('http://localhost:4720/upload', {
         method: 'POST',
         body: formData,
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000' 
+        }
       })
       .then((response) => response.json())
       .then((data) => {
         props.setImageURL(data.url);
+        console.log(data.url)
       })
       .catch((error) => {
         console.error('Error:', error);

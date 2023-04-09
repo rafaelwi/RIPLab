@@ -11,8 +11,8 @@
     "@types/node": "^16.18.14",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
-    "ag-grid-community": "^29.2.0",
-    "ag-grid-react": "^29.2.0",
+    "ag-charts-community": "^7.2.0",
+    "ag-charts-react": "^7.2.0",
     "cors": "^2.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -47,5 +47,5 @@
     ]
   },
   "packageManager": "yarn@3.4.1",
-  "proxy": "http://localhost:4720/"
+  "proxy": "http://127.0.0.1:4720"
 }

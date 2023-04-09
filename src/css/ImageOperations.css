@@ -95,3 +95,7 @@ input[type=radio] {
     transform: scale(1.5);
     margin-bottom: 6px;
 }
+
+.operation-result {
+    height: 500px;
+}

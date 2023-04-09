@@ -3346,23 +3346,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ag-grid-community@npm:^29.2.0":
-  version: 29.2.0
-  resolution: "ag-grid-community@npm:29.2.0"
-  checksum: b69904674110cdf95ce7223854821bfaa0b9da972b07a0d6306857abeeb5b231b2c28a966f050cc4569337822458edf58f0b7e7d29632ee2a4d5fdee9236f2f7
+"ag-charts-community@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "ag-charts-community@npm:7.2.0"
+  checksum: 44e064cdc98d4739b34078ff1c9b72df74b4c61452e4fb4df78ad1545b0f37f95d9dc02843d9724019cf9701b184cf75d68d7a30675c5eb35bdaae0cae97d141
   languageName: node
   linkType: hard
 
-"ag-grid-react@npm:^29.2.0":
-  version: 29.2.0
-  resolution: "ag-grid-react@npm:29.2.0"
+"ag-charts-react@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "ag-charts-react@npm:7.2.0"
   dependencies:
-    prop-types: ^15.8.1
+    prop-types: ^15.6.2
   peerDependencies:
-    ag-grid-community: ~29.2.0
+    ag-charts-community: ~7.2.0
     react: ^16.3.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
-  checksum: 17573e141acafe5e8bd94fe2b67fab5689942ce5210778246045ec8a3755c62a9370ce356bdd8f554cac36eff1c7feb386a748d0a2aa970c63a90fcc2456e6a6
+  checksum: b9517234dbd1daa2c01643e62d04f8c3316f5c5300df1fe3145d335fdc8fee461c76b959f25f0f614b9261cb452c26b4e3049bf589d7e24d8fe0967f6179453d
   languageName: node
   linkType: hard
 
@@ -10298,7 +10298,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -10918,8 +10918,8 @@ __metadata:
     "@types/node": ^16.18.14
     "@types/react": ^18.0.33
     "@types/react-dom": ^18.0.11
-    ag-grid-community: ^29.2.0
-    ag-grid-react: ^29.2.0
+    ag-charts-community: ^7.2.0
+    ag-charts-react: ^7.2.0
     cors: ^2.8.5
     react: ^18.2.0
     react-dom: ^18.2.0

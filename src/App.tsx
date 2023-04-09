@@ -20,9 +20,8 @@ import HistogramEqualization from './components/HistogramEqualization';
 import NonLinearFilter from './components/NonLinearFilter';
 import Convolution from './components/Convolution';
 import SaltPepper from './components/SaltPepper';
-import { TbHistoryOff, TbPolygon, TbSalt } from 'react-icons/tb';
+import { TbPolygon, TbSalt } from 'react-icons/tb';
 import Shear from './components/Shear';
-import cors from 'cors';
 
 interface DropdownItem {
   title: string;
@@ -42,8 +41,6 @@ class App extends React.Component<{}, EditedImage> {
     };
     this.setImageURL = this.setImageURL.bind(this);
   }
-
-  // this.use(cors());
 
   componentDidMount() {
     this.setState({ url: 'http://localhost:4720/uploads/missing.png' });
