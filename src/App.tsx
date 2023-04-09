@@ -18,6 +18,7 @@ import PowerLaw from './components/PowerLaw';
 import Histogram from './components/Histogram';
 import HistogramEqualization from './components/HistogramEqualization';
 import NonLinearFilter from './components/NonLinearFilter';
+import Convolution from './components/Convolution';
 
 
 interface DropdownItem {
@@ -39,7 +40,7 @@ class App extends React.Component<{}, EditedImage> {
     this.setImageURL = this.setImageURL.bind(this);
   }
 
-  
+
   componentDidMount() {
     this.setState({ url: 'http://localhost:4720/uploads/missing.png' });
     this.dropdownItems = [
@@ -85,7 +86,7 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Convolution",
-        content: <div>Content for Dropdown 3</div>,
+        content: <Convolution imageURL={this.state.url}/>,
         icon: <BsGrid3X3Gap size={28} />
       },
       {

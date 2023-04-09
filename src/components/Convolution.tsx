@@ -5,12 +5,12 @@ interface ImageOperationsProps {
   imageURL: string;
 }
 
-function PowerLaw(props: ImageOperationsProps) {
+function Convolution(props: ImageOperationsProps) {
   return (
     <div className="img-operation">
-        <div className='operation-item'>
-            <label className='label-left' htmlFor="gamma"><h4>gamma</h4></label>
-            <input type="number" id="gamma" name="gamma" placeholder='𝜸'/>
+        <div className='operation-item kernel'>
+            <h4>Kernel</h4>
+            <textarea name="kernel" id="kernel" cols={30} rows={10} placeholder='0 -1 0&#10;-1 5 -1&#10;0 -1 0'></textarea>
         </div>
 
         <div className='operation-action'>
@@ -20,4 +20,4 @@ function PowerLaw(props: ImageOperationsProps) {
   );
 }
 
-export default PowerLaw;
+export default Convolution;
