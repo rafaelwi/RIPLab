@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/ImageOperations.css';
 
 interface ImageOperationsProps {
-  imageURL: string;
+  url: string;
 }
 
 function LinearMap(props: ImageOperationsProps) {

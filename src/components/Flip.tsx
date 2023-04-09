@@ -3,7 +3,7 @@ import '../css/ImageOperations.css';
 import {TbFlipHorizontal, TbFlipVertical} from 'react-icons/tb';
 
 interface ImageOperationsProps {
-  imageURL: string;
+  url: string;
 }
 
 function Flip(props: ImageOperationsProps) {

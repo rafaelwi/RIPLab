@@ -3,7 +3,7 @@ from PIL.Image import Image
 from common import get_image_pixels, get_image_writables
 from collections import defaultdict
 
-def histogram(img : Image) -> dict:
+def histogram(img : Image) -> tuple[dict, list]:
     """
     Get the histogram for an image
     :param img: The image to get the histogram for
@@ -13,6 +13,7 @@ def histogram(img : Image) -> dict:
     pixels = get_image_pixels(img)
     bands = img.getbands()
     channels = {band: defaultdict(int) for band in bands}
+    channels_flat = []
 
     # Calculate histogram by iterating over each pixel and band
     for x in range(img.width):
@@ -21,14 +22,19 @@ def histogram(img : Image) -> dict:
             for i, band in enumerate(bands):
                 channels[band][colour[i]] += 1
 
-    # Set default values for missing keys
+    # Set default values for missing keys, and flatten histogram
     # TODO: Generalize this to work with any number bits
     for i in range(256):
         for band in bands:
             channels[band][i]
+            channels_flat.append({
+                'channel': band,
+                'grayscale': i,
+                'count': channels[band][i]
+            })
 
     # Return histogram
-    return channels
+    return channels, channels_flat
 
 
 def histogram_equalization(img : Image, params: dict) -> Image:

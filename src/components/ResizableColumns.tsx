@@ -83,7 +83,7 @@ class ResizableColumns extends React.Component<ColumnProps, ColumnsState> {
         </div>
         <div className={'colResizeRight'} style={{ width: this.state.offset }}>
           <div className={'colResizeHandle'}></div>
-          <div style={{ overflowY: 'auto', paddingLeft: '16px' }}>
+          <div style={{ overflowY: 'auto', paddingLeft: '24px' }}>
             {this.props.right}
           </div>
         </div>

@@ -93,8 +93,13 @@ def dispatch():
 
     # Call operation
     if operation == 'histogram':
-        histogram_dict = histogram(img)
-        return {'operation': operation, 'parameters': validated_params, 'method': method, 'histogram': histogram_dict}
+        histogram_dict, graphable_histogram = histogram(img)
+        return {'operation': operation, 
+                'parameters': validated_params, 
+                'method': method, 
+                'histogram': histogram_dict,
+                'data': graphable_histogram
+            }
     else:
         new_img = call_operation(operation, img, validated_params)
 

@@ -12,10 +12,6 @@ interface DropdownProps {
   icon?: React.ReactNode;
 }
 
-interface EditedImage {
-  url: string;
-  setImageURL: (url: string) => void;
-}
 
 const Dropdown = ({ title, content, icon }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,28 +50,6 @@ const Dropdown = ({ title, content, icon }: DropdownProps) => {
 };
 
 
-const handleUploadImage = (ev: { preventDefault: () => void; }) => {
-  ev.preventDefault();
-  
-  let uploadInput: any;
-  const data = new FormData();
-  data.append('file', uploadInput.files[0]);
-
-  fetch('http://localhost:4720/upload', {
-    method: 'POST',
-    body: data,
-  }).then((response) => {
-    response.json().then((body) => {
-      // this.setState({ imageURL: body.url });
-    });
-  });
-};
-
-const uploaded = (event: React.ChangeEvent<HTMLInputElement>) => {
-  event.preventDefault();
-  console.log('something uploaded')
-  console.log(event)
-}
 interface DropdownListProps {
   items: DropdownProps[];
   url: string;
@@ -94,13 +68,13 @@ function DropdownList (props: DropdownListProps) {
         method: 'POST',
         body: formData,
       })
-        .then((response) => response.json())
-        .then((data) => {
-          props.setImageURL(data.url);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+      .then((response) => response.json())
+      .then((data) => {
+        props.setImageURL(data.url);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     }
   };
 

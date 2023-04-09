@@ -20,9 +20,9 @@ import HistogramEqualization from './components/HistogramEqualization';
 import NonLinearFilter from './components/NonLinearFilter';
 import Convolution from './components/Convolution';
 import SaltPepper from './components/SaltPepper';
-import { TbPolygon, TbSalt } from 'react-icons/tb';
+import { TbHistoryOff, TbPolygon, TbSalt } from 'react-icons/tb';
 import Shear from './components/Shear';
-
+import cors from 'cors';
 
 interface DropdownItem {
   title: string;
@@ -43,68 +43,69 @@ class App extends React.Component<{}, EditedImage> {
     this.setImageURL = this.setImageURL.bind(this);
   }
 
+  // this.use(cors());
 
   componentDidMount() {
     this.setState({ url: 'http://localhost:4720/uploads/missing.png' });
     this.dropdownItems = [
       {
         title: "Crop",
-        content: <Crop imageURL={this.state.url}/>,
+        content: <Crop url={this.state.url}/>,
         icon: <BiCrop size={28} />
       },
       {
         title: "Flip",
-        content: <Flip imageURL={this.state.url}/>,
+        content: <Flip url={this.state.url}/>,
         icon: <MdFlip size={28} />
       },
       {
         title: "Scale",
-        content: <Scale imageURL={this.state.url}/>,
+        content: <Scale url={this.state.url}/>,
         icon: <MdOutlinePhotoSizeSelectLarge size={28} />
       },
       {
         title: "Rotate",
-        content: <Rotate imageURL={this.state.url}/>,
+        content: <Rotate url={this.state.url}/>,
         icon: <MdOutlineRotate90DegreesCw size={28} />
       },
       {
         title: "Linear Map",
-        content: <LinearMap imageURL={this.state.url}/>,
+        content: <LinearMap url={this.state.url}/>,
         icon: <AiOutlineAreaChart size={28} />
       },
       {
         title: "Power Law Map",
-        content: <PowerLaw imageURL={this.state.url}/>,
+        content: <PowerLaw url={this.state.url}/>,
         icon: <BsPower size={28} />
       },
       {
         title: "Histogram",
-        content: <Histogram imageURL={this.state.url}/>,
+        content: <Histogram url={this.state.url}/>,
         icon: <GiHistogram size={28} />
       },
       {
         title: "Histogram Equalization",
-        content: <HistogramEqualization imageURL={this.state.url}/>,
+        content: <HistogramEqualization url={this.state.url}/>,
         icon: <BiEqualizer size={28} />
       },
       {
         title: "Convolution",
-        content: <Convolution imageURL={this.state.url}/>,
+        content: <Convolution url={this.state.url}/>,
         icon: <BsGrid3X3Gap size={28} />
       },
       {
         title: "Salt and Pepper Noise",
-        content: <SaltPepper imageURL={this.state.url}/>,
+        content: <SaltPepper url={this.state.url}/>,
         icon: <TbSalt size={28} />
       },
       {
         title: "Non-Linear Filter",
-        content: <NonLinearFilter imageURL={this.state.url}/>,
+        content: <NonLinearFilter url={this.state.url}/>,
         icon: <IoFilterSharp size={28} />
       },
       {
         title: "Shear",
-        content: <Shear imageURL={this.state.url}/>,
+        content: <Shear url={this.state.url}/>,
         icon: <TbPolygon size={28} />
       }
     ];
@@ -117,7 +118,6 @@ class App extends React.Component<{}, EditedImage> {
   }
 
 
-
   render() {
     return (
       <div
@@ -127,7 +127,7 @@ class App extends React.Component<{}, EditedImage> {
       >
         <ResizableColumns
           left={<DropdownList items={this.dropdownItems} url={this.state.url} setImageURL={this.setImageURL}/>}
-          right={<ImageView imageURL={this.state.url} />}
+          right={<ImageView url={this.state.url} />}
         />
       </div>
     );
