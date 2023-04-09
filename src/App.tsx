@@ -12,6 +12,7 @@ import ImageView from './components/ImageView';
 import Flip from './components/Flip';
 import Scale from './components/Scale';
 import Rotate from './components/Rotate';
+import LinearMap from './components/LinearMap';
 
 
 interface DropdownItem {
@@ -60,7 +61,7 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Linear Map",
-        content: <div>Content for Dropdown 2</div>,
+        content: <LinearMap imageURL={this.state.url}/>,
         icon: <AiOutlineAreaChart size={28} />
       },
       {
