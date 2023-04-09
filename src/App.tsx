@@ -13,6 +13,9 @@ import Flip from './components/Flip';
 import Scale from './components/Scale';
 import Rotate from './components/Rotate';
 import LinearMap from './components/LinearMap';
+import PowerLaw from './components/PowerLaw';
+import Histogram from './components/Histogram';
+import HistogramEqualization from './components/HistogramEqualization';
 
 
 interface DropdownItem {
@@ -66,17 +69,17 @@ class App extends React.Component<{}, EditedImage> {
       },
       {
         title: "Power Law Map",
-        content: <div>Content for Dropdown 3</div>,
+        content: <PowerLaw imageURL={this.state.url}/>,
         icon: <BsPower size={28} />
       },
       {
         title: "Histogram",
-        content: <div>Content for Dropdown 1</div>,
+        content: <Histogram imageURL={this.state.url}/>,
         icon: <GiHistogram size={28} />
       },
       {
         title: "Histogram Equalization",
-        content: <div>Content for Dropdown 2</div>,
+        content: <HistogramEqualization imageURL={this.state.url}/>,
         icon: <BiEqualizer size={28} />
       },
       {
