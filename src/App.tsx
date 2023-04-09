@@ -9,6 +9,7 @@ import './App.css';
 import DropdownList from './components/DropdownList';
 import ResizableColumns from './components/ResizableColumns';
 import ImageView from './components/ImageView';
+import Crop from './components/Crop';
 import Flip from './components/Flip';
 import Scale from './components/Scale';
 import Rotate from './components/Rotate';
@@ -38,14 +39,13 @@ class App extends React.Component<{}, EditedImage> {
     this.setImageURL = this.setImageURL.bind(this);
   }
 
-
-
+  
   componentDidMount() {
     this.setState({ url: 'http://localhost:4720/uploads/missing.png' });
     this.dropdownItems = [
       {
         title: "Crop",
-        content: <div>Content for Dropdown 1</div>,
+        content: <Crop imageURL={this.state.url}/>,
         icon: <BiCrop size={28} />
       },
       {
