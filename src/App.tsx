@@ -173,6 +173,7 @@ class App extends React.Component<{}, EditedImage> {
               <Dropdown title='Convolution' content={<Convolution url={this.state.url}/>} icon={<BsGrid3X3Gap size={28} />} />
               <Dropdown title='Salt and Pepper Noise' content={<SaltPepper url={this.state.url}/>} icon={<TbSalt size={28} />} />
               <Dropdown title='Non-Linear Filter' content={<NonLinearFilter url={this.state.url}/>} icon={<IoFilterSharp size={28} />} />
+              <Dropdown title='Shear' content={<Shear url={this.state.url}/>} icon={<TbPolygon size={28} />} />
             </div>
           </>
           }

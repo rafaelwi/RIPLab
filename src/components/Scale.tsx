@@ -22,11 +22,11 @@ function Scale(props: ImageOperationsProps) {
         <div className='operation-item dir-column'>
             <h3 style={{marginTop: '0px', marginBottom: '4px'}}>Method</h3>
             <div>
-                <input type="radio" id="nn" name="method" value="30"/>
+                <input type="radio" id="nn" name="method" value="nn"/>
                 <label htmlFor="nn" className='label-checkbox'>Nearest Neighbour</label>
             </div>
             <div>
-                <input type="radio" id="bl" name="method" value="60"/>
+                <input type="radio" id="bl" name="method" value="bl"/>
                 <label htmlFor="bl" className='label-checkbox'>Bilinear</label>
             </div>
         </div>
