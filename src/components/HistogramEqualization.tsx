@@ -1,30 +1,19 @@
-import React from 'react';
 import '../css/ImageOperations.css';
 import { ImageOperationProp } from '../common/types';
+import { sendCommonRequest } from '../common/utils';
 
 
 function HistogramEqualization(props: ImageOperationProp) {
   const equalize = async () => {
     // Get parameters
-    const applyToAlpha = document.getElementById('apply-to-alpha') as HTMLInputElement;
+    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
 
     // Make request
-    const resp = await fetch('http://localhost:4720/histogram-equalization', {
-      method: 'POST',
-      body: JSON.stringify({
-        url: props.url,
-        'apply-to-alpha': applyToAlpha.checked
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
-      }
-    })
-    .then((response) => response.json())
-    .then((response) => {
-      const newURL : string = response.url;
-      props.setImageURL(newURL);
-    });
+    sendCommonRequest(
+      'http://localhost:4720/histogram-equalization',
+      JSON.stringify({ url: props.url, 'apply-to-alpha': applyToAlpha }),
+      props.setImageURL
+    );
   }
 
 
