@@ -58,8 +58,8 @@ class App extends React.Component<{}, ImageReaderProp> {
               <Dropdown title='Flip' content={<Flip url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdFlip size={28} />} />
               <Dropdown title='Scale' content={<Scale url={this.state.url}/>} icon={<MdOutlinePhotoSizeSelectLarge size={28} />} />
               <Dropdown title='Rotate' content={<Rotate url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdOutlineRotate90DegreesCw size={28} />} />
-              <Dropdown title='Linear Map' content={<LinearMap url={this.state.url}/>} icon={<AiOutlineAreaChart size={28} />} />
-              <Dropdown title='Power Law Map' content={<PowerLaw url={this.state.url}/>} icon={<BsPower size={28} />} />
+              <Dropdown title='Linear Map' content={<LinearMap url={this.state.url} setImageURL={this.setImageURL}/>} icon={<AiOutlineAreaChart size={28} />} />
+              <Dropdown title='Power Law Map' content={<PowerLaw url={this.state.url} setImageURL={this.setImageURL}/>} icon={<BsPower size={28} />} />
               <Dropdown title='Histogram' content={<Histogram url={this.state.url}/>} icon={<GiHistogram size={28} />} />
               <Dropdown title='Histogram Equalization' content={<HistogramEqualization url={this.state.url} setImageURL={this.setImageURL}/>} icon={<BiEqualizer size={28} />} />
               <Dropdown title='Convolution' content={<Convolution url={this.state.url}/>} icon={<BsGrid3X3Gap size={28} />} />
