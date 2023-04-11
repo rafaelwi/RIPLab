@@ -54,9 +54,9 @@ class App extends React.Component<{}, ImageReaderProp> {
           <>
             <DropdownList url={this.state.url} setImageURL={this.setImageURL} />
             <div style={{ margin: '8px' }}>
-              <Dropdown title='Crop' content={<Crop url={this.state.url}/>} icon={<BiCrop size={28} />} />
+              <Dropdown title='Crop' content={<Crop url={this.state.url} setImageURL={this.setImageURL}/>} icon={<BiCrop size={28} />} />
               <Dropdown title='Flip' content={<Flip url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdFlip size={28} />} />
-              <Dropdown title='Scale' content={<Scale url={this.state.url}/>} icon={<MdOutlinePhotoSizeSelectLarge size={28} />} />
+              <Dropdown title='Scale' content={<Scale url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdOutlinePhotoSizeSelectLarge size={28} />} />
               <Dropdown title='Rotate' content={<Rotate url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdOutlineRotate90DegreesCw size={28} />} />
               <Dropdown title='Linear Map' content={<LinearMap url={this.state.url} setImageURL={this.setImageURL}/>} icon={<AiOutlineAreaChart size={28} />} />
               <Dropdown title='Power Law Map' content={<PowerLaw url={this.state.url} setImageURL={this.setImageURL}/>} icon={<BsPower size={28} />} />
