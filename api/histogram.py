@@ -75,7 +75,7 @@ def histogram_equalization(img : Image, params: dict) -> Image:
     apply_to_alpha = params['apply_to_alpha']
 
     # Load image
-    channels = histogram(img)
+    channels, _, _ = histogram(img)
     pixels, new_img, draw = get_image_writables(img)
     bands = img.getbands()
     nr_pixels = img.width * img.height
@@ -88,13 +88,19 @@ def histogram_equalization(img : Image, params: dict) -> Image:
         new_graylevels['A'] = {i : i for i in range(256)}
 
     # Apply equalization
-    for x in range(img.width):
-        for y in range(img.height):
-            colour = pixels[x, y]
-            print(colour)
-            new_colour = tuple([new_graylevels[band][colour[i]] for i, band in enumerate(bands)])
-            draw.point((x, y), new_colour)
-    
+    if len(bands) == 1:
+        for x in range(img.width):
+            for y in range(img.height):
+                colour = pixels[x, y]
+                new_colour = new_graylevels[bands[0]][colour]
+                draw.point((x, y), new_colour)
+    else:
+        for x in range(img.width):
+            for y in range(img.height):
+                colour = pixels[x, y]
+                new_colour = tuple([new_graylevels[band][colour[i]] for i, band in enumerate(bands)])
+                draw.point((x, y), new_colour)
+
     return new_img
 
 

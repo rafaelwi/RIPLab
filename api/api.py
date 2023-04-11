@@ -74,13 +74,14 @@ def generate_filename():
 def dispatch():
     operation = request.path.replace('/', '') 
     method = request.method
-    print (f'Operation: {operation}, Method: {method}')
 
     # Get parameters
     if request.method == 'GET':
         params = request.args
     else:
         params = request.get_json()
+    
+    print (f'Operation: {operation}, Method: {method}\n\tParams: {params}')
 
     # Validate parameters for given operation
     success, validated_params, msg = validate_params(operation, params)
@@ -109,7 +110,7 @@ def dispatch():
         new_url = save_image(new_img, validated_params['ext'])
 
         return {'operation': operation, 'parameters': validated_params, 
-                'method': method, 'new-url': new_url}
+                'method': method, 'url': UPLOAD_FOLDER + new_url}
 
 
 def validate_params(operation, params) -> tuple[bool, dict, str]:

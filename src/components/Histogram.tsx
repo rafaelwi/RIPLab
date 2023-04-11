@@ -8,7 +8,7 @@ interface ImageOperationsProps {
 }
 
 function Histogram(props: ImageOperationsProps) {
-  const url = props.url.replace('http://localhost:4720/', '');
+  // const url = props.url.replace('http://localhost:4720/', '');
   const [options, setOptions] = useState<AgChartOptions>({
     autoSize: true,
     title: { text: 'Image Histogram' },
@@ -20,7 +20,7 @@ function Histogram(props: ImageOperationsProps) {
   const calculateHistogram = async () => {
     const resp = await fetch('http://localhost:4720/histogram', { 
       method: 'POST',
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({url: props.url}),
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': 'http://localhost:3000' 
@@ -28,7 +28,6 @@ function Histogram(props: ImageOperationsProps) {
     })
     .then((response) => response.json())
     .then((response) => {
-      console.log(response.data)
       setOptions({
         title: {text: 'Image Histogram'}, 
         data: response.data, 

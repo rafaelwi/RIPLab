@@ -4,6 +4,7 @@ import {GoChevronDown, GoChevronUp} from 'react-icons/go';
 import { AiOutlineDownload, AiOutlineUpload } from "react-icons/ai";
 import { MdOutlineRestorePage } from "react-icons/md";
 import { BiUndo, BiRedo } from "react-icons/bi";
+import { ImageOperationProp } from "../common/types";
 
 
 interface DropdownProps {
@@ -13,50 +14,7 @@ interface DropdownProps {
 }
 
 
-const Dropdown = ({ title, content, icon }: DropdownProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <div className="dropdown">
-      <div className="dropdown-item"
-        onClick={handleToggle}
-        style={{ 
-          display: 'flex',
-          flexFlow: 'row wrap',
-          cursor: 'pointer',
-          flexDirection: 'column'
-      }}>
-        <div style={{display: 'flex', alignItems: 'baseline', textAlign: 'center'}}>
-          <div style={{display: 'block', margin: 'auto 10px auto 0'}}>{icon}</div>
-          <h3 style={{}}>{title}</h3>
-
-          <div style={{marginLeft: 'auto'}}>
-            {isOpen ? <GoChevronUp /> : <GoChevronDown />}
-          </div>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="dropdown-content">
-          {content}
-        </div>
-      )}
-    </div>
-  );
-};
-
-
-interface DropdownListProps {
-  items: DropdownProps[];
-  url: string;
-  setImageURL: (url: string) => void;
-}
-
-function DropdownList (props: DropdownListProps) {
+function DropdownList (props: ImageOperationProp) {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +32,6 @@ function DropdownList (props: DropdownListProps) {
       .then((response) => response.json())
       .then((data) => {
         props.setImageURL(data.url);
-        console.log(data.url)
       })
       .catch((error) => {
         console.error('Error:', error);

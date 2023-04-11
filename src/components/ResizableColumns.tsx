@@ -49,7 +49,6 @@ class ResizableColumns extends React.Component<ColumnProps, ColumnsState> {
       
       var offset = container.offsetWidth - (e.clientX - container.offsetLeft);
       const windowWidth = window.innerWidth;
-      console.log(offset, windowWidth)
 
       if (offset >= windowWidth - self.state.minOffset) 
         offset = windowWidth - self.state.minOffset;
