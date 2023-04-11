@@ -1,11 +1,23 @@
-import React from 'react';
 import '../css/ImageOperations.css';
+import { ImageOperationProp } from '../common/types';
+import { sendCommonRequest } from '../common/utils';
 
-interface ImageOperationsProps {
-  url: string;
-}
 
-function Convolution(props: ImageOperationsProps) {
+function Convolution(props: ImageOperationProp) {
+  const convolve = async () => {
+    // Get parameters
+    const kernel = (document.getElementById('kernel') as HTMLInputElement).value;
+    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+
+    // Make request
+    sendCommonRequest(
+      'http://localhost:4720/kernel',
+      JSON.stringify({ url: props.url, kernel, 'apply-to-alpha': applyToAlpha }),
+      props.setImageURL
+    )
+    console.log(kernel);
+  }
+
   return (
     <div className="img-operation">
         <div className='operation-item kernel'>
@@ -18,7 +30,7 @@ function Convolution(props: ImageOperationsProps) {
           <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
         </div>
 
-        <div className='operation-action'>
+        <div className='operation-action' onClick={convolve}>
             <h3>Map</h3>
         </div>
     </div>

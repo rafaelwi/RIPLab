@@ -46,6 +46,7 @@ def upload():
 """
 Returns a given image from the upload folder
 """
+@app.route(f'/{UPLOAD_FOLDER}{UPLOAD_FOLDER}<path:filename>')
 @app.route(f'/{UPLOAD_FOLDER}<path:filename>')
 def serve_upload(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
@@ -212,10 +213,14 @@ def validate_params(operation, params) -> tuple[bool, dict, str]:
         # Check if kernel is a valid matrix
         if kernel is None:
             return False, {}, 'Kernel not specified'
+        if type(kernel) == str:
+            print(kernel)
+            kernel = [i.split() for i in kernel.split('\n')]
+            print(kernel)
         first_len = len(kernel[0])
         if not all(len(x) == first_len for x in kernel[1:]):
             return False, {}, 'Kernel is not a rectangular matrix'
-        
+            
         # Convert kernel values to floats
         kernel = [[float(Fraction(i)) for i in j] for j in kernel]
         validated_params['kernel'] = kernel
