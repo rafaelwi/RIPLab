@@ -1,11 +1,25 @@
-import React from 'react';
 import '../css/ImageOperations.css';
+import { ImageOperationProp } from '../common/types';
+import { sendCommonRequest } from '../common/utils';
 
-interface ImageOperationsProps {
-  url: string;
-}
 
-function NonLinearFilter(props: ImageOperationsProps) {
+function NonLinearFilter(props: ImageOperationProp) {
+  const filterImage = async () => {
+    // Get parameters
+    const size = parseInt((document.getElementById('size') as HTMLInputElement).value);
+    const type = (document.querySelector('input[name="type"]:checked') as HTMLInputElement).value;
+    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+
+    // Make request
+    sendCommonRequest(
+      'http://localhost:4720/filter',
+      JSON.stringify({ url: props.url, type, 
+        size: size ? size : 3, 'apply-to-alpha': applyToAlpha 
+      }),
+      props.setImageURL
+    )
+  }
+
   return (
     <div className="img-operation">
       <div className='operation-item'>
@@ -35,7 +49,7 @@ function NonLinearFilter(props: ImageOperationsProps) {
         <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
       </div>
 
-      <div className='operation-action'>
+      <div className='operation-action' onClick={filterImage}>
         <h3>Filter</h3>
       </div>
 

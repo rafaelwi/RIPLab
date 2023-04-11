@@ -1,11 +1,26 @@
-import React from 'react';
 import '../css/ImageOperations.css';
+import { ImageOperationProp } from '../common/types';
+import { sendCommonRequest } from '../common/utils';
 
-interface ImageOperationsProps {
-  url: string;
-}
 
-function SaltPepper(props: ImageOperationsProps) {
+function SaltPepper(props: ImageOperationProp) {
+  const generateNoise = async () => {
+    // Get parameters
+    const salt = parseFloat((document.getElementById('salt') as HTMLInputElement)?.value);
+    const pepper = parseFloat((document.getElementById('pepper') as HTMLInputElement)?.value);
+    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+
+    // Make request
+    sendCommonRequest(
+      'http://localhost:4720/generate-noise',
+      JSON.stringify({ 
+        url: props.url, 'salt-chance': salt ? salt : 0, 
+        'pepper-chance': pepper ? pepper : 0, 'apply-to-alpha': applyToAlpha
+      }),
+      props.setImageURL
+    )
+  }
+
   return (
     <div className="img-operation">
         <div className='operation-item'>
@@ -23,7 +38,7 @@ function SaltPepper(props: ImageOperationsProps) {
           <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
         </div>
 
-        <div className='operation-action'>
+        <div className='operation-action' onClick={generateNoise}>
             <h3>Generate Noise</h3>
         </div>
     </div>

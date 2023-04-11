@@ -63,8 +63,8 @@ class App extends React.Component<{}, ImageReaderProp> {
               <Dropdown title='Histogram' content={<Histogram url={this.state.url}/>} icon={<GiHistogram size={28} />} />
               <Dropdown title='Histogram Equalization' content={<HistogramEqualization url={this.state.url} setImageURL={this.setImageURL}/>} icon={<BiEqualizer size={28} />} />
               <Dropdown title='Convolution' content={<Convolution url={this.state.url}/>} icon={<BsGrid3X3Gap size={28} />} />
-              <Dropdown title='Salt and Pepper Noise' content={<SaltPepper url={this.state.url}/>} icon={<TbSalt size={28} />} />
-              <Dropdown title='Non-Linear Filter' content={<NonLinearFilter url={this.state.url}/>} icon={<IoFilterSharp size={28} />} />
+              <Dropdown title='Salt and Pepper Noise' content={<SaltPepper url={this.state.url} setImageURL={this.setImageURL}/>} icon={<TbSalt size={28} />} />
+              <Dropdown title='Non-Linear Filter' content={<NonLinearFilter url={this.state.url} setImageURL={this.setImageURL}/>} icon={<IoFilterSharp size={28} />} />
               <Dropdown title='Shear' content={<Shear url={this.state.url} setImageURL={this.setImageURL}/>} icon={<TbPolygon size={28} />} />
             </div>
           </>
