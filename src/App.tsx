@@ -57,7 +57,7 @@ class App extends React.Component<{}, ImageReaderProp> {
               <Dropdown title='Crop' content={<Crop url={this.state.url}/>} icon={<BiCrop size={28} />} />
               <Dropdown title='Flip' content={<Flip url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdFlip size={28} />} />
               <Dropdown title='Scale' content={<Scale url={this.state.url}/>} icon={<MdOutlinePhotoSizeSelectLarge size={28} />} />
-              <Dropdown title='Rotate' content={<Rotate url={this.state.url}/>} icon={<MdOutlineRotate90DegreesCw size={28} />} />
+              <Dropdown title='Rotate' content={<Rotate url={this.state.url} setImageURL={this.setImageURL}/>} icon={<MdOutlineRotate90DegreesCw size={28} />} />
               <Dropdown title='Linear Map' content={<LinearMap url={this.state.url}/>} icon={<AiOutlineAreaChart size={28} />} />
               <Dropdown title='Power Law Map' content={<PowerLaw url={this.state.url}/>} icon={<BsPower size={28} />} />
               <Dropdown title='Histogram' content={<Histogram url={this.state.url}/>} icon={<GiHistogram size={28} />} />
@@ -65,7 +65,7 @@ class App extends React.Component<{}, ImageReaderProp> {
               <Dropdown title='Convolution' content={<Convolution url={this.state.url}/>} icon={<BsGrid3X3Gap size={28} />} />
               <Dropdown title='Salt and Pepper Noise' content={<SaltPepper url={this.state.url}/>} icon={<TbSalt size={28} />} />
               <Dropdown title='Non-Linear Filter' content={<NonLinearFilter url={this.state.url}/>} icon={<IoFilterSharp size={28} />} />
-              <Dropdown title='Shear' content={<Shear url={this.state.url}/>} icon={<TbPolygon size={28} />} />
+              <Dropdown title='Shear' content={<Shear url={this.state.url} setImageURL={this.setImageURL}/>} icon={<TbPolygon size={28} />} />
             </div>
           </>
           }

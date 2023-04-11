@@ -1,16 +1,25 @@
-import React from 'react';
 import '../css/ImageOperations.css';
+import { ImageOperationProp } from '../common/types';
+import { sendCommonRequest } from '../common/utils';
 
-interface ImageOperationsProps {
-  url: string;
-}
+function Shear(props: ImageOperationProp) {
+  const shearImage = async () => {
+    // Get parameters
+    const deg = parseFloat((document.getElementById('shear-deg') as HTMLInputElement).value);
+    const direction = (document.querySelector('input[name="direction"]:checked') as HTMLInputElement)?.value;
+    
+    sendCommonRequest(
+      'http://localhost:4720/shear',
+      JSON.stringify({ url: props.url, deg, direction }),
+      props.setImageURL
+    )
+  }
 
-function Shear(props: ImageOperationsProps) {
   return (
     <div className="img-operation">
         <div className='operation-item flex-reverse'>
-            <label className='label-right' htmlFor="deg"><h4>degrees</h4></label>
-            <input type="number" id="deg" name="deg" placeholder='deg'/>
+            <label className='label-right' htmlFor="shear-deg"><h4>degrees</h4></label>
+            <input type="number" id="shear-deg" name="shear-deg" placeholder='deg'/>
         </div>
 
         <div className='operation-item dir-column'>
@@ -25,7 +34,7 @@ function Shear(props: ImageOperationsProps) {
             </div>
         </div>
 
-        <div className='operation-action'>
+        <div className='operation-action' onClick={shearImage}>
             <h3>Shear</h3>
         </div>
 

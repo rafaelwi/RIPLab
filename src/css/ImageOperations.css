@@ -14,6 +14,10 @@
     cursor: pointer;
 }
 
+.operation-btn, .operation-action {
+    user-select: none;
+}
+
 .operation-action {
     margin-top: 16px;
     background-color: #28a745;
