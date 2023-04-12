@@ -23,10 +23,6 @@
     border-left: solid 4px transparent; 
 }
 
-#colResizeWrapper .colResizeFullCol {
-    /* width: 100vw;  */
-}
-
 #colResizeWrapper .colResizeHandle {
     position: absolute;
     top: 0;
