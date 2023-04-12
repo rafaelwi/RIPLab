@@ -40,38 +40,73 @@ class App extends React.Component<{}, ImageHistoryProp> {
     this.state = {
       url: this.initImg,
       originalURL: this.initImg,
-      history: [this.initImg]
+      history: [this.initImg],
+      undoHistory: [],
     };
 
     this.setImageURL = this.setImageURL.bind(this);
     this.setOriginalURL = this.setOriginalURL.bind(this);
+    this.modifyHistory = this.modifyHistory.bind(this);
   }
 
   
   componentDidMount() {
-    this.setState({ url: this.initImg, originalURL: this.initImg, history: [this.initImg] });
+    this.setState({ 
+      url: this.initImg, 
+      originalURL: this.initImg, 
+      history: [this.initImg],
+      undoHistory: [], 
+    });
   }
 
   setImageURL = (url: string) => {
     url = url.replace('http://localhost:4720/', '');
     this.setState({ url: url });
     this.modifyHistory('add', url);
-    console.log(this.state.history);
+  }
+
+  setImageURLOnRedo = (url: string) => {
+    url = url.replace('http://localhost:4720/', '');
+    this.setState({ url: url });
+    this.modifyHistory('addonredo', url);
   }
 
   setOriginalURL = (url: string) => {
     url = url.replace('http://localhost:4720/', '');
     this.setState({ originalURL: url });
+    this.modifyHistory('add', url);
   }
 
   modifyHistory = (action: string, url: string) => {
     if (action === 'add') {
       url = url.replace('http://localhost:4720/', '');
-      this.setState({ history: [...this.state.history, url] });
+      this.setState({ 
+        history: [...this.state.history, url],
+        undoHistory: []  
+      });
+    } else if (action === 'addonredo') {
+      url = url.replace('http://localhost:4720/', '');
+      this.setState({ 
+        history: [...this.state.history, url],
+      });
     } else if (action === 'undo') {
-      this.setState({ history: this.state.history.slice(0, this.state.history.length - 1) });
+      this.setState({ 
+        history: this.state.history.slice(0, this.state.history.length - 1),
+        undoHistory: [...this.state.undoHistory, url],
+        url: url
+      });
     } else if (action === 'redo') {
-      this.setState({ history: [...this.state.history, url] });
+      this.setState({ 
+        history: [...this.state.history, url],
+        undoHistory: this.state.undoHistory.slice(0, this.state.undoHistory.length - 1), 
+      });
+      this.setImageURLOnRedo(url);
+    } else if (action === 'reset') {
+      this.setState({ 
+        history: [this.initImg],
+        undoHistory: [],
+        url: this.initImg,
+      });
     }
   }
 
@@ -84,7 +119,8 @@ class App extends React.Component<{}, ImageHistoryProp> {
             <>
               <DropdownList url={this.state.url} setImageURL={this.setImageURL} 
                 original={this.state.originalURL} setOriginal={this.setOriginalURL}
-                modifyHistory={this.modifyHistory}
+                history={this.state.history} modifyHistory={this.modifyHistory}
+                undoHistory={this.state.undoHistory}
               />
               <div style={{ margin: '8px' }}>
                 <Dropdown title='Crop' content={<Crop url={this.state.url} setImageURL={this.setImageURL} />} icon={<BiCrop size={28} />} />

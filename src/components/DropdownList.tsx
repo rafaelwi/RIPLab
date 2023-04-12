@@ -50,15 +50,22 @@ function DropdownList (props: DropdownProp) {
   }
 
   const resetImage = () => {
-    props.setImageURL(props.original);
+    props.modifyHistory('reset', props.original);
   }
 
   const undoAction = () => {
-    // TODO
+    let history = props.history;
+    if (history.length <= 1) return;
+    let lastItem = history[history.length - 1];
+    props.setImageURL(lastItem);
+    props.modifyHistory('undo', lastItem);
   }
 
   const redoAction = () => {
-    // TODO
+    let undoHistory = props.undoHistory;
+    if (undoHistory.length <= 0) return;
+    let lastItem = undoHistory[undoHistory.length - 1];
+    props.modifyHistory('redo', lastItem);
   }
 
   return (
