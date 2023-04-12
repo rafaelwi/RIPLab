@@ -7,7 +7,7 @@ function Convolution(props: ImageOperationProp) {
   const convolve = async () => {
     // Get parameters
     const kernel = (document.getElementById('kernel') as HTMLInputElement).value;
-    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+    const applyToAlpha = (document.getElementById('convolution-apply-to-alpha') as HTMLInputElement).checked;
 
     // Make request
     sendCommonRequest(
@@ -26,8 +26,8 @@ function Convolution(props: ImageOperationProp) {
         </div>
 
         <div className='operation-item kernel'>
-          <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
-          <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+          <input type="checkbox" id="convolution-apply-to-alpha" name="convolution-apply-to-alpha"/>
+          <label htmlFor="convolution-apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
         </div>
 
         <div className='operation-action' onClick={convolve}>

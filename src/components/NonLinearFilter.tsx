@@ -8,7 +8,7 @@ function NonLinearFilter(props: ImageOperationProp) {
     // Get parameters
     const size = parseInt((document.getElementById('size') as HTMLInputElement).value);
     const type = (document.querySelector('input[name="type"]:checked') as HTMLInputElement).value;
-    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+    const applyToAlpha = (document.getElementById('nlf-apply-to-alpha') as HTMLInputElement).checked;
 
     // Make request
     sendCommonRequest(
@@ -45,8 +45,8 @@ function NonLinearFilter(props: ImageOperationProp) {
       </div>
 
       <div className='operation-item kernel'>
-        <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
-        <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+        <input type="checkbox" id="nlf-apply-to-alpha" name="nlf-apply-to-alpha"/>
+        <label htmlFor="nlf-apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
       </div>
 
       <div className='operation-action' onClick={filterImage}>

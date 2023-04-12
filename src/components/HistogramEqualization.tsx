@@ -6,7 +6,7 @@ import { sendCommonRequest } from '../common/utils';
 function HistogramEqualization(props: ImageOperationProp) {
   const equalize = async () => {
     // Get parameters
-    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+    const applyToAlpha = (document.getElementById('histogram-apply-to-alpha') as HTMLInputElement).checked;
 
     // Make request
     sendCommonRequest(
@@ -20,8 +20,8 @@ function HistogramEqualization(props: ImageOperationProp) {
   return (
     <div className="img-operation">
       <div className='operation-item kernel'>
-        <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
-        <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+        <input type="checkbox" id="histogram-apply-to-alpha" name="histogram-apply-to-alpha"/>
+        <label htmlFor="histogram-apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
       </div>
 
       <div className='operation-action' onClick={equalize}>

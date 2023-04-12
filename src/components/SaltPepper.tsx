@@ -8,7 +8,7 @@ function SaltPepper(props: ImageOperationProp) {
     // Get parameters
     const salt = parseFloat((document.getElementById('salt') as HTMLInputElement)?.value);
     const pepper = parseFloat((document.getElementById('pepper') as HTMLInputElement)?.value);
-    const applyToAlpha = (document.getElementById('apply-to-alpha') as HTMLInputElement).checked;
+    const applyToAlpha = (document.getElementById('noise-apply-to-alpha') as HTMLInputElement).checked;
 
     // Make request
     sendCommonRequest(
@@ -34,8 +34,8 @@ function SaltPepper(props: ImageOperationProp) {
         </div>
 
         <div className='operation-item kernel'>
-          <input type="checkbox" id="apply-to-alpha" name="apply-to-alpha"/>
-          <label htmlFor="apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
+          <input type="checkbox" id="noise-apply-to-alpha" name="noise-apply-to-alpha"/>
+          <label htmlFor="noise-apply-to-alpha" className='label-checkbox'>Apply to Alpha Channel?</label>
         </div>
 
         <div className='operation-action' onClick={generateNoise}>
