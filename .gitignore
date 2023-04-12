@@ -194,4 +194,6 @@ cython_debug/
 # Images
 *.png
 !missing.png
+!src/images/*
 api/uploads/*
+src/images/.DS_Store
