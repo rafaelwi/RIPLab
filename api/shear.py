@@ -11,12 +11,12 @@ def shear(img : Image, params : dict) -> Image:
     :param params: A dictionary containing the parameters for the shear.
     """
     if params['direction'] == 'vertical':
-        return vertical_sheer(img, params)
+        return vertical_shear(img, params)
     elif params['direction'] == 'horizontal':
-        return horizontal_sheer(img, params)
+        return horizontal_shear(img, params)
     
 
-def vertical_sheer(img : Image, params : dict) -> Image:
+def vertical_shear(img : Image, params : dict) -> Image:
     """
     Vertically shears an image by a given angle.
     :param img: The image to shear.
@@ -52,7 +52,7 @@ def vertical_sheer(img : Image, params : dict) -> Image:
     return new_img
 
 
-def horizontal_sheer(img : Image, params : dict) -> Image:
+def horizontal_shear(img : Image, params : dict) -> Image:
     """
     Horizontally shears an image by a given angle.
     :param img: The image to shear.
