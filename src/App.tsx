@@ -7,10 +7,9 @@ import { IoFilterSharp } from 'react-icons/io5';
 import { MdFlip, MdOutlinePhotoSizeSelectLarge, MdOutlineRotate90DegreesCw } from 'react-icons/md';
 import { TbPolygon, TbSalt } from 'react-icons/tb';
 
-import './App.css';
+import './css/App.css';
 
 import { ImageHistoryProp } from './common/types';
-import { useUndoableState } from './common/utils';
 
 import Convolution from './components/Convolution';
 import Crop from './components/Crop';
@@ -103,9 +102,9 @@ class App extends React.Component<{}, ImageHistoryProp> {
       this.setImageURLOnRedo(url);
     } else if (action === 'reset') {
       this.setState({ 
-        history: [this.initImg],
+        history: [url],
         undoHistory: [],
-        url: this.initImg,
+        url: url,
       });
     }
   }
@@ -113,7 +112,7 @@ class App extends React.Component<{}, ImageHistoryProp> {
 
   render() {
     return (
-      <div style={{ height: '100vh' }}>
+      <div className='app'>
         <ResizableColumns
           left={
             <>
@@ -122,7 +121,7 @@ class App extends React.Component<{}, ImageHistoryProp> {
                 history={this.state.history} modifyHistory={this.modifyHistory}
                 undoHistory={this.state.undoHistory}
               />
-              <div style={{ margin: '8px' }}>
+              <div className='dropdowns'>
                 <Dropdown title='Crop' content={<Crop url={this.state.url} setImageURL={this.setImageURL} />} icon={<BiCrop size={28} />} />
                 <Dropdown title='Flip' content={<Flip url={this.state.url} setImageURL={this.setImageURL} />} icon={<MdFlip size={28} />} />
                 <Dropdown title='Scale' content={<Scale url={this.state.url} setImageURL={this.setImageURL} />} icon={<MdOutlinePhotoSizeSelectLarge size={28} />} />

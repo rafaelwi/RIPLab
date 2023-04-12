@@ -29,7 +29,7 @@ function NonLinearFilter(props: ImageOperationProp) {
       </div>
 
       <div className='operation-item dir-column'>
-        <h3 style={{ marginTop: '0px', marginBottom: '4px' }}>Method</h3>
+        <h3 className='text-header'>Method</h3>
         <div>
           <input type="radio" id="min" name="type" value="min" />
           <label htmlFor="min" className='label-checkbox'>Min</label>

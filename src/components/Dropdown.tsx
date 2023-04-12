@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {GoChevronDown, GoChevronUp} from 'react-icons/go';
+import '../css/Dropdown.css';
 
 
 interface ImageEditorProps {
@@ -17,19 +18,12 @@ function Dropdown(props: ImageEditorProps) {
   
   return (
     <div className="dropdown">
-      <div className="dropdown-item"
-        onClick={handleToggle}
-        style={{ 
-          display: 'flex',
-          flexFlow: 'row wrap',
-          cursor: 'pointer',
-          flexDirection: 'column'
-      }}>
-        <div style={{display: 'flex', alignItems: 'baseline', textAlign: 'center'}}>
-          <div style={{display: 'block', margin: 'auto 10px auto 0'}}>{props.icon}</div>
-          <h3 style={{}}>{props.title}</h3>
+      <div className="dropdown-item" onClick={handleToggle}>
+        <div className='dropdown-text'>
+          <div className='icon'>{props.icon}</div>
+          <h3>{props.title}</h3>
 
-          <div style={{marginLeft: 'auto'}}>
+          <div className='chevron'>
             {isOpen ? <GoChevronUp /> : <GoChevronDown />}
           </div>
         </div>

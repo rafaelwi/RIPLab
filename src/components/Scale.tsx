@@ -35,7 +35,7 @@ function Scale(props: ImageOperationProp) {
       </div>
 
       <div className='operation-item dir-column'>
-        <h3 style={{ marginTop: '0px', marginBottom: '4px' }}>Method</h3>
+        <h3 className='text-header'>Method</h3>
         <div>
           <input type="radio" id="nn" name="method" value="nn" />
           <label htmlFor="nn" className='label-checkbox'>Nearest Neighbour</label>

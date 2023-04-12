@@ -103,3 +103,8 @@ input[type=radio] {
 .operation-result {
     height: 500px;
 }
+
+.text-header {
+    margin-top: 0;
+    margin-bottom: 4px;
+}

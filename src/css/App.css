@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.app {
+  height: 100vh;
+}
+
+.dropdowns {
+  margin: 8px;
+}

@@ -23,7 +23,7 @@ function Shear(props: ImageOperationProp) {
         </div>
 
         <div className='operation-item dir-column'>
-            <h3 style={{marginTop: '0px', marginBottom: '4px'}}>Direction</h3>
+            <h3 className='text-header'>Direction</h3>
             <div>
                 <input type="radio" id="vertical" name="direction" value="vertical"/>
                 <label htmlFor="vertical" className='label-checkbox'>Vertical</label>

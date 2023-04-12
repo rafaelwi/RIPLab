@@ -1,0 +1,21 @@
+.dropdown-item {
+    display: flex;
+    flex-flow: row wrap;
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.dropdown-text {
+    display: flex;
+    align-items: baseline;
+    text-align: center;
+}
+
+.icon {
+    display: block;
+    margin: auto 10px auto 0;
+}
+
+.chevron {
+    margin-left: auto;
+}
