@@ -14,7 +14,7 @@ The pretty interface that you interact with
 Download the repo from GitHub and download the necessary libraries
 
 ```
-git clone https://github.com/rafaelwi/riplab
+git clone https://github.com/rafaelwi/RIPLab
 cd riplab
 npm start
 cd api
