@@ -197,3 +197,7 @@ cython_debug/
 !src/images/*
 api/uploads/*
 src/images/.DS_Store
+!img/dice.png
+!img/histogram*.png
+!img/rms.png
+!img/waddledee.png
